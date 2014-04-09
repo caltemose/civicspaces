@@ -1,6 +1,7 @@
 var errors = require('./errors');
 var login = require('./login');
-//var posts = require('./posts');
+var statics = require('./statics');
+//var user = require('./user');
 var mongoose = require('mongoose');
 //var BlogPost = mongoose.model('BlogPost');
 
@@ -19,7 +20,10 @@ module.exports = function (app) {
   login(app);
 
   // public static pages
-  //statics(app);
+  statics(app);
+
+  // user account pages
+  //user(app);
 
   // error handlers
   errors(app);
