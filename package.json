@@ -1,0 +1,27 @@
+{
+  "name": "civicspaces-prototype",
+  "version": "0.0.0",
+  "description": "A Node/Express/MongoDB/Mongoose codebase with a Bootstrap-based front-end for the 2014 CivicSpaces prototype.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/caltemose/civicspaces.git"
+  },
+  "author": "Chad L. Altemose",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/caltemose/civicspaces/issues"
+  },
+  "homepage": "https://github.com/caltemose/civicspaces",
+  "dependencies": {
+    "express": "~3.5.1",
+    "mongoose": "~3.8.8",
+    "express-mongoose": "~0.1.0",
+    "connect-mongo": "~0.4.0",
+    "email-validator": "~1.0.0",
+    "jade": "~1.3.1"
+  }
+}

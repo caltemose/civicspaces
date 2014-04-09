@@ -1,0 +1,171 @@
+$maxTextWidth: 64rem;
+
+body {
+  font-size: 16px;
+  padding-top: 3.5em;
+  background: #eee;
+}
+h1 {
+  margin-bottom: 1em;
+  & > small {
+    display: block;
+  }
+}
+
+label { 
+  display: block;
+  font-weight: normal;
+  color: #444;
+  & > select {
+    display: block;
+    width: 90%;
+  }
+}
+label.terms {
+  margin: 1.3em 0;
+}
+input.btn {
+  font-size: 1.4em;
+}
+
+.main {
+  margin-top: -0.3em;
+  padding-bottom: 4em;
+  background: #fff;
+}
+
+.no-transition {
+  -webkit-transition: height 0.1s;
+  -moz-transition: height 0.1s;
+  -ms-transition: height 0.1s;
+  -o-transition: height 0.1s;
+  transition: height 0.1s;
+
+  padding-top: 0.2em;
+  font-size: 0.9em;
+}
+
+.navbar-inverse {
+  background: #ed6a1c;
+  border-color: #ed6a1c;
+  & .navbar-brand {
+    color: #fff;
+  }
+}
+.navbar-inverse .navbar-toggle {
+  border: none;
+  background: none;
+  &:hover, &:focus {
+    background: none;
+  }
+}
+.navbar-inverse .navbar-collapse {
+  border: none;
+}
+.navbar-inverse .navbar-nav > li > a {
+  color: #eee;
+}
+.navbar > .container .navbar-brand {
+  width: 200px;
+  height: 47px;
+  margin: 0 0 2px 1.3rem;
+  text-indent: -9999rem;
+  background: url(../img/civicspaces-logo.png) no-repeat;
+  // font-size: 1.6em;
+  @media all and (min-width: 768px) {
+    margin-left: 0;
+  }
+}
+
+.navbar-nav {
+  font-size: 1.2em;
+}
+.nav-prime {
+  font-size: 1.5em;
+}
+.promo { /* div */
+  margin: 0 1em 1em 0;
+  padding: 1em;
+  -webkit-border-radius: 0.5em;
+  -moz-border-radius: 0.5em;
+  border-radius: 0.5em;
+  background: #e2ecf1;
+}
+
+
+.list-group-item:nth-child(odd) {
+  background: #f6f6f6;
+}
+.home {
+  font-size: 2.5em;
+  margin-top: 2em;
+}
+
+.note { /* p */
+  color: #999;
+}
+
+.list-inline {
+  & > li {
+    padding-right: 0.5em;
+    border-right: 1px solid black;
+  }
+  & > li:last-child {
+    border-right: none;
+  }
+}
+
+.not-too-wide {
+  max-width: $maxTextWidth;
+}
+
+.grouped {
+  padding-left: 0.5em;
+}
+
+.section {
+  margin-bottom: 2em;
+}
+
+.has-error span {
+  display: block;
+  padding-left: 0.4em;
+  margin-bottom: 0.75em;
+  font-size: 0.8em;
+  font-style: italic;
+  color: #a00;
+}
+
+.terms.has-error .error {
+  background: #fee;
+}
+
+.btn.drop {
+  margin-top: 0.6em;
+}
+
+.well.result > img {
+  max-width: 100px;
+}
+
+.footer {
+  padding: 1em 0 3em 0;
+  font-size: 0.8em;
+
+  ul {
+    list-style-type: none;
+    margin: 0 0 0.8em;
+    padding: 0;
+
+    & > li {
+      display: inline-block;
+      margin-right: 1.8em;
+      padding-right: 0;
+
+      @media all and (max-width: 768px) {
+        display: block;
+        padding: 0.3em 0;
+      }
+    }
+  }
+}
