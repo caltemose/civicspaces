@@ -1,0 +1,68 @@
+extends ../layout
+
+block title
+  title #{sitetitle} | Add a New Space
+
+block content
+
+  div.container
+
+    h1 Add a New Space
+
+    if !session.isLoggedIn
+      p 
+        | If you already have a user account, please 
+        a(href="/login") log in
+        |  first. 
+      p 
+        | If you do not have an account, you must 
+        a(href="/signup") create one
+        |  first before adding a space/property.
+
+    else 
+      div.row
+        div.col-md-7
+          p Fill out and submit this form to create a listing for a new space. 
+          
+          if invalid
+            div.alert.alert-danger Invalid. Why?
+
+      form(method="POST" action="/space/create" enctype="application/x-www-form-urlencoded")
+
+
+        div.row
+          div.col-md-6
+
+            label
+              | *Address: 
+              input.form-control(name="address" type="text" maxlength="128" data-validate-rules="required")
+              span
+
+            label
+              | City: 
+              input.form-control(name="city" type="text" maxlength="128")
+
+            label
+              | *Zip Code: 
+              input.form-control(name="zip" type="text" maxlength="10" data-validate-rules="required|zip")
+              span
+
+          
+            label.terms
+              input(name="terms" type="checkbox" data-validate-rules="checked") 
+              |  *I agree to the 
+              a(href="/terms") Terms &amp; Conditions
+              |  for listing properties on this site and am aware of my responsibilities as a property listing agent.
+              span
+
+            label Contact: 
+              br 
+              | #{session.user}
+                
+                
+
+            input.btn.btn-success(type="submit" name="submit" value="Create Listing") 
+
+            div(style="margin-top:1.5em;")
+              p.note
+                small *Required fields.

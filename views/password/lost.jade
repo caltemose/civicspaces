@@ -1,0 +1,21 @@
+extends ../layout
+
+block title
+  title #{sitetitle} | Lost Password - Send Email
+
+block content
+
+  div.container
+    
+    h1 Lost Password - Send Email
+
+    form(method="POST")
+
+      if nouser
+        p.error There was no user associated with the email you submitted.
+
+      label
+        | Enter the email associated with your account: 
+        input.form-control(type="text" name="email")
+
+      input.btn.btn-primary.drop(type="submit" name="submit" value="Send Password Reset Email")

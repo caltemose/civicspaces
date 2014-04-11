@@ -15,7 +15,10 @@ module.exports = function (app) {
   app.post('/signup', function (req, res, next) {
     var email = cleanString(req.param('email'));
     var pass = cleanString(req.param('pass'));
-    if (!(email && pass)) {
+    var name = cleanString(req.param('name'));
+    var phone = cleanString(req.param('phone'));
+
+    if (!(email && pass && name && phone)) {
       return invalid();
     }
 
@@ -32,6 +35,8 @@ module.exports = function (app) {
         var user = { _id: email };
         user.salt = bytes.toString('utf8');
         user.hash = hash(pass, user.salt);
+        user.name = name;
+        user.phone = phone;
 
         User.create(user, function (err, newUser) {
           if (err) {

@@ -25,6 +25,8 @@ module.exports = function (app) {
   }));
   app.use(express.urlencoded());
 
+  app.locals.sitetitle = 'CivicSpaces';
+
   // expose session to views
   app.use(function (req, res, next) {
     res.locals.session = req.session;

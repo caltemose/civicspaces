@@ -1,7 +1,9 @@
 var errors = require('./errors');
 var login = require('./login');
+var password = require('./password');
 var statics = require('./statics');
 //var user = require('./user');
+var spaces = require('./spaces');
 var mongoose = require('mongoose');
 //var BlogPost = mongoose.model('BlogPost');
 
@@ -19,11 +21,17 @@ module.exports = function (app) {
   // login / logout routes
   login(app);
 
+  // password lost/reset
+  password(app);
+
   // public static pages
   statics(app);
 
   // user account pages
   //user(app);
+
+  // space CRUD
+  spaces(app);
 
   // error handlers
   errors(app);

@@ -30,8 +30,8 @@ html
             if session.isLoggedIn
               li
                 a(href="/logout") Log Out
-              li
-                a(href="/me") My Account
+              //- li
+              //-   a(href="/me") My Account
             else
               li
                 a(href="/login") Log In
@@ -69,10 +69,13 @@ html
             a(href='/privacy') Privacy Policy
 
           if session.isLoggedIn
-            li
-              a(href="/me") My Account
+            //- li
+            //-   a(href="/me") My Account
             li
               a(href="/logout") Log Out
+          else
+            li
+              a(href="/login") Log In
 
         p.copyright Copyright ©2014 CivicSpaces.
 

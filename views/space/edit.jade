@@ -1,0 +1,278 @@
+extends ../layout
+
+block title
+  title #{sitetitle} | Edit Space Details
+
+block content
+
+  div.container
+
+    h1 Edit Space Details
+
+    p Edit your space details below. You can increase your space's popularity by including more details and uploading several good-quality photos.
+
+    p.note
+      small *Required fields.
+
+    form(method="POST")
+
+      input(type="hidden" name="_id" value=space._id)
+
+      div.section
+
+        if noAddressZip
+          div.alert.alert-danger Please ensure that you've provided a valid address and zip code when making changes to a space.
+
+        h2 Location and Contact Info
+
+        div.row
+          div.col-md-6
+
+            label
+              | *Address: 
+              input.form-control(name="address" type="text" maxlength="128" data-validate-rules="required" value="#{space.address}")
+              span
+
+            label
+              | City: 
+              input.form-control(name="city" type="text" maxlength="128" value="#{space.city}")
+
+            label
+              | *Zip Code: 
+              input.form-control(name="zip" type="text" maxlength="10" data-validate-rules="required|zip" value="#{space.zip}")
+              span
+
+          
+          div.col-md-6
+            label
+              | *Contact Email: 
+              br 
+              | #{space.contact}
+
+
+      div.section
+
+        h2 Size and Type
+
+        div.row
+
+          //- @TODO fix the ENUM/SELECT menu intelligence for type, leaseLength, etc
+
+          div.col-sm-6
+            label 
+              | Type of space: 
+              select.form-control(name="type")
+                option(value="") Select one...
+                if (space.type == "Storefront")
+                  option(value="Storefront" selected) Storefront
+                else 
+                  option(value="Storefront") Storefront
+
+                if (space.type == "Office Only")
+                  option(value="Office Only" selected) Office Only
+                else 
+                  option(value="Office Only") Office Only
+
+                if (space.type == "Loft/Mixed Use")
+                  option(value="Loft/Mixed Use" selected) Loft/Mixed Use
+                else 
+                  option(value="Loft/Mixed Use") Loft/Mixed Use
+
+                if (space.type == "Land/Property")
+                  option(value="Land/Property" selected) Land/Property
+                else 
+                  option(value="Land/Property") Land/Property
+                
+            label 
+              | Preferred length of lease:
+              select.form-control(name="leaseLength") 
+                option(value="") None
+                if (space.leaseLength == "Single-day Use")
+                  option(value="Single-day Use" selected) Single-day Use
+                else
+                  option(value="Single-day Use") Single-day Use
+
+                if (space.leaseLength == "Multi-day Use")
+                  option(value="Multi-day Use" selected) Multi-day Use
+                else
+                  option(value="Multi-day Use") Multi-day Use
+
+                if (space.leaseLength == "Multi-week Use")
+                  option(value="Multi-week Use" selected) Multi-week Use
+                else
+                  option(value="Multi-week Use") Multi-week Use
+
+                if (space.leaseLength == "Long-term Use")
+                  option(value="Long-term Use" selected) Long-term Use
+                else
+                  option(value="Long-term Use") Long-term Use
+                
+
+          div.col-sm-6
+            label
+              | Area: 
+              small (square feet) 
+              input.form-control(type="text" size="5" name="area" maxlength="5" value=space.area) 
+
+            label
+              | Maximum occupancy:
+              input.form-control(type="text" size="5" name="maxOccupants" maxlength="5" value=space.maxOccupants) 
+
+          
+
+      div.section
+
+        h2 Allowed Uses
+
+        div.row
+          div.col-sm-6
+            label Allow on premises:
+  
+            div.grouped
+              label
+                if space.allowed.foodBev
+                  input(type="checkbox" name="allowedFood" checked="checked")
+                else
+                  input(type="checkbox" name="allowedFood")
+                |  Food &amp; beverage
+
+              label
+                if space.allowed.alcohol
+                  input(type="checkbox" name="allowedAlcohol" checked="checked")
+                else
+                  input(type="checkbox" name="allowedAlcohol")
+                |  Alcohol 
+
+              label
+                if space.allowed.music
+                  input(type="checkbox" name="allowedMusic" checked="checked")
+                else
+                  input(type="checkbox" name="allowedMusic")
+                |  Loud music/noise 
+                small (with owner approval)
+
+          div.col-sm-6
+            label Allowed modifications of space:
+
+            div.grouped
+              label
+                if space.allowed.modifications == 'None'
+                  input(type="radio" name="allowedMods" value="None" checked="checked") 
+                else
+                  input(type="radio" name="allowedMods" value="None") 
+                |  None
+
+              label
+                if space.allowed.modifications == 'Non-intrusive'
+                  input(type="radio" name="allowedMods" value="Non-intrusive" checked="checked") 
+                else 
+                  input(type="radio" name="allowedMods" value="Non-intrusive") 
+                |  Non-intrusive only 
+                small (wall hangings, for example)
+
+              label
+                if space.allowed.modifications == 'Intrusive'
+                  input(type="radio" name="allowedMods" value="Intrusive" checked="checked") 
+                else
+                  input(type="radio" name="allowedMods" value="Intrusive") 
+                |  Intrusive  
+                small (with owner's permission)
+
+
+      div.section
+
+        h2 Amenities
+
+        div.row
+          div.col-sm-4
+            div.grouped 
+              label
+                if space.amenities.wifi
+                  input(type="checkbox" name="wifi" checked="checked") 
+                else
+                  input(type="checkbox" name="wifi") 
+                |  Wireless internet
+
+              label
+                if space.amenities.parkingOnSite
+                  input(type="checkbox" name="parking" checked="checked") 
+                else
+                  input(type="checkbox" name="parking") 
+                |  On-site parking
+
+              label
+                if space.amenities.handicap
+                  input(type="checkbox" name="handicap" checked="checked") 
+                else
+                  input(type="checkbox" name="handicap") 
+                |  Handicap Access
+
+              label
+                if space.amenities.furnished
+                  input(type="checkbox" name="furnished" checked="checked") 
+                else
+                  input(type="checkbox" name="furnished") 
+                |  This space is furnished
+
+          div.col-sm-4
+            label Bathroom facilities:
+
+            div.grouped
+              label
+                if space.amenities.bathroom == 'None'
+                  input(type="radio" name="bathroom" value="None" checked="checked") 
+                else
+                  input(type="radio" name="bathroom" value="None") 
+                |  None
+              label
+                if space.amenities.bathroom == 'Single'
+                  input(type="radio" name="bathroom" value="Single" checked="checked") 
+                else
+                  input(type="radio" name="bathroom" value="Single") 
+                |  Single bathroom
+              label
+                if space.amenities.bathroom == 'Multiple'
+                  input(type="radio" name="bathroom" value="Multiple" checked="checked") 
+                else
+                  input(type="radio" name="bathroom" value="Multiple") 
+                |  Multiple bathrooms
+
+          div.col-sm-4
+            label Kitchen facilities:
+
+            div.grouped
+              label
+                if space.amenities.kitchen == 'None'
+                  input(type="radio" name="kitchen" value="None" checked="checked") 
+                else
+                  input(type="radio" name="kitchen" value="None") 
+                |  None
+              label
+                if space.amenities.kitchen == 'Partial'
+                else
+                  input(type="radio" name="kitchen" value="Partial") 
+                |  Partial kitchen
+              label
+                if space.amenities.kitchen == 'Full'
+                  input(type="radio" name="kitchen" value="Full" checked="checked") 
+                else
+                  input(type="radio" name="kitchen" value="Full") 
+                |  Full kitchen
+
+
+      div.section
+
+        h2 Description
+        
+        p.not-too-wide Enter your description below. You may wish to include details about allowed uses, amenities or other details.
+
+        textarea.form-control.not-too-wide(name="description" rows="10" cols="20")= space.description
+
+      //- div.section
+
+      //-   h2 Photos
+
+      input.btn.btn-success(type="submit" name="submit" value="Save Listing") 
+
+
+      
