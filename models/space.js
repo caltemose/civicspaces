@@ -45,6 +45,23 @@ schema.statics.edit = function(req, callback) {
   if (req.param('leaseLength').length > 0) update.leaseLength = req.param('leaseLength');
   if (req.param('area').length > 0) update.area = req.param('area');
   if (req.param('maxOccupants').length > 0) update.maxOccupants = req.param('maxOccupants');
+  //allowed
+  update.allowed = {};
+  update.allowed.foodBev = true ? req.param('allowedFood') == 'on' : false;
+  update.allowed.alcohol = true ? req.param('allowedAlcohol') == 'on' : false;
+  update.allowed.music = true ? req.param('allowedMusic') == 'on' : false;
+  if (req.param('allowedMods')) update.allowed.modifications = req.param('allowedMods');
+  //amenities
+  update.amenities = {};
+  update.amenities.wifi = true ? req.param('wifi') == 'on' : false;
+  update.amenities.parkingOnSite = true ? req.param('parking') == 'on' : false;
+  update.amenities.handicap = true ? req.param('handicap') == 'on' : false;
+  update.amenities.furnished = true ? req.param('furnished') == 'on' : false;
+  if (req.param('bathroom')) update.amenities.bathroom = req.param('bathroom');
+  if (req.param('kitchen')) update.amenities.kitchen = req.param('kitchen');
+  //description
+  if (req.param('description').length > 0) update.description = req.param('description');
+
   //update the model
   this.update(query, update, function(err, affected) {
     if (err) return callback(err);

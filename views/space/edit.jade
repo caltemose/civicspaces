@@ -63,49 +63,21 @@ block content
               | Type of space: 
               select.form-control(name="type")
                 option(value="") Select one...
-                if (space.type == "Storefront")
-                  option(value="Storefront" selected) Storefront
-                else 
-                  option(value="Storefront") Storefront
-
-                if (space.type == "Office Only")
-                  option(value="Office Only" selected) Office Only
-                else 
-                  option(value="Office Only") Office Only
-
-                if (space.type == "Loft/Mixed Use")
-                  option(value="Loft/Mixed Use" selected) Loft/Mixed Use
-                else 
-                  option(value="Loft/Mixed Use") Loft/Mixed Use
-
-                if (space.type == "Land/Property")
-                  option(value="Land/Property" selected) Land/Property
-                else 
-                  option(value="Land/Property") Land/Property
+                each val in ['Storefront', 'Office Only', 'Loft/Mixed Use', 'Land/Property']
+                  if (space.type == val)
+                    option(value=val selected)= val
+                  else
+                    option(value=val)= val
                 
             label 
               | Preferred length of lease:
               select.form-control(name="leaseLength") 
                 option(value="") None
-                if (space.leaseLength == "Single-day Use")
-                  option(value="Single-day Use" selected) Single-day Use
-                else
-                  option(value="Single-day Use") Single-day Use
-
-                if (space.leaseLength == "Multi-day Use")
-                  option(value="Multi-day Use" selected) Multi-day Use
-                else
-                  option(value="Multi-day Use") Multi-day Use
-
-                if (space.leaseLength == "Multi-week Use")
-                  option(value="Multi-week Use" selected) Multi-week Use
-                else
-                  option(value="Multi-week Use") Multi-week Use
-
-                if (space.leaseLength == "Long-term Use")
-                  option(value="Long-term Use" selected) Long-term Use
-                else
-                  option(value="Long-term Use") Long-term Use
+                each val in ['Single-day Use', 'Multi-day Use', 'Multi-week Use', 'Long-term Use']
+                  if (space.leaseLength == val)
+                    option(value=val selected)= val
+                  else
+                    option(value=val)= val
                 
 
           div.col-sm-6
