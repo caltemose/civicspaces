@@ -8,6 +8,16 @@ h1 {
   h1 > small {
     display: block; }
 
+li {
+  margin-bottom: 0.6em; }
+
+dt {
+  font-weight: normal; }
+
+dd {
+  font-weight: bold;
+  margin-bottom: 0.5em; }
+
 label {
   display: block;
   font-weight: normal;

@@ -5,6 +5,15 @@ var Space = mongoose.model('Space');
 
 module.exports = function (app) {
 
+  app.get('/space/view/:id', function(req, res) {
+    Space.findById(req.param('id'), function(err, space) {
+      if (err) return next(err);
+      // @TODO if no space found, handle error appropriately
+      if (!space) return next();
+      res.render('space/view.jade', {space: space});
+    })
+  })
+
   app.get('/space/create', function (req, res) {
     if (req.session.isLoggedIn) {
       res.render('space/create.jade');  
@@ -71,6 +80,14 @@ module.exports = function (app) {
         res.redirect('/space/edit/' + req.param('id'));
       })
     }
+  })
+
+  app.get('/space/list', function(req, res) {
+    Space.find({}, null, { limit: 25 }, function (err, spaces) {
+      if (err) return next(err);
+      if (!spaces) return next();
+      return res.render('space/list.jade', {spaces: spaces});
+    });
   })
 
 }

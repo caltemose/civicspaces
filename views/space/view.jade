@@ -1,0 +1,110 @@
+extends ../layout
+
+block title
+  title #{sitetitle} | Edit Space Details
+
+block content
+
+  div.container
+
+    h1 Space Details
+
+    div.section
+
+      div.row
+        div.col-md-6
+
+          h3 Location and Contact Info
+          dl
+            dt Address:
+            dd= space.address
+
+            dt City:
+            dd= space.city
+
+            dt Zip Code:
+            dd= space.zip
+
+            dt Contact Email:
+            dd= space.contact
+
+
+          h3 Size and Type
+          dl
+            dt Type of Space:
+            dd= space.type
+            
+            dt Preferred length of lease:
+            dd= space.leaseLength
+            
+            dt 
+              | Area 
+              small (square feet):
+            dd= space.area
+
+            dt Maximum occupancy:
+            dd= space.maxOccupants
+
+      
+          h3 Allowed Uses
+          dl
+            dt Food and beverages allowed?  
+            if space.allowed.foodBev
+              dd Yes
+            else
+              dd No
+
+            dt Alcohol allowed? 
+            if space.allowed.alcohol
+              dd Yes
+            else
+              dd No
+
+            dt Music allowed?
+            if space.allowed.music
+              dd Yes
+            else
+              dd No
+            
+            dt Allowed modifications of space:
+            dd= space.allowed.modification
+
+            
+          h3 Amenities
+          dl
+            dt Wireless internet?
+            if space.amenities.wifi
+              dd Yes
+            else
+              dd No
+
+            dt Parking on site?
+            if space.amenities.parkingOnSite
+              dd Yes
+            else 
+              dd No
+
+            dt Handicap access?
+            if space.amenities.handicap
+              dd Yes
+            else
+              dd No
+            
+            dt Furnished?
+            if space.amenities.furnished
+              dd Yes
+            else
+              dd No
+    
+          
+            dl
+              dt Bathroom facilities: 
+              dd= space.amenities.bathroom
+
+            dl
+              dt Kitchen facilities:
+              dd= space.amenities.kitchen
+
+          h3 Description
+
+          div.well= space.description
