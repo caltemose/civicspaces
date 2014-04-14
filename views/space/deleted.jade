@@ -1,0 +1,26 @@
+extends ../layout
+
+block title
+  title #{sitetitle} | Space Deleted
+
+block content
+
+  div.container
+
+    h1 Space Deleted
+
+    div.section
+
+      div.row
+        div.col-md-6
+          if spaceDeleted
+            p 
+              | The space at this address: 
+              strong= space.address
+              |  has been permanently deleted.
+          
+          if spaceNotFound
+            p
+              | The space at this address: 
+              strong= space.address
+              |  could not be deleted.

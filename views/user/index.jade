@@ -1,0 +1,33 @@
+extends ../layout
+
+block title
+  title #{sitetitle} | My Account
+
+block content
+
+  div.container
+
+    h1 My Account
+
+    div.section
+
+      h3 Contact Info
+      ul
+        li= user.name
+        li= user.id
+        li= user.phone
+
+      h3 My Spaces
+      ul
+        each space in spaces 
+          li 
+            a(href="/space/view/#{space.id}") #{space.address}
+            |, #{space.zip} 
+            a(href="/space/edit/#{space.id}")
+              small [edit]
+            |  
+            a(href="/space/deactivate/#{space.id}") 
+              small [deactive]
+            |  
+            a(href="/space/remove/#{space.id}")
+              small [delete]

@@ -30,8 +30,8 @@ html
             if session.isLoggedIn
               li
                 a(href="/logout") Log Out
-              //- li
-              //-   a(href="/me") My Account
+              li
+                a(href="/me") My Account
             else
               li
                 a(href="/login") Log In
@@ -39,9 +39,9 @@ html
             li
               a(href="/resources") Resources
             li
-              a.nav-prime(href="/find") Find
+              a.nav-prime(href="/space/list") Find
             li
-              a.nav-prime(href="/list") List
+              a.nav-prime(href="/space/create") List
 
           
     
@@ -69,8 +69,8 @@ html
             a(href='/privacy') Privacy Policy
 
           if session.isLoggedIn
-            //- li
-            //-   a(href="/me") My Account
+            li
+              a(href="/me") My Account
             li
               a(href="/logout") Log Out
           else

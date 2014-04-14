@@ -2,7 +2,7 @@ var errors = require('./errors');
 var login = require('./login');
 var password = require('./password');
 var statics = require('./statics');
-//var user = require('./user');
+var user = require('./user');
 var spaces = require('./spaces');
 var mongoose = require('mongoose');
 //var BlogPost = mongoose.model('BlogPost');
@@ -28,7 +28,7 @@ module.exports = function (app) {
   statics(app);
 
   // user account pages
-  //user(app);
+  user(app);
 
   // space CRUD
   spaces(app);

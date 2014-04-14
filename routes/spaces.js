@@ -82,6 +82,23 @@ module.exports = function (app) {
     }
   })
 
+  app.get('/space/remove/:id', loggedIn, function(req, res) {
+    // @TODO this needs to search by id AND contact to ensure the logged in user is the space owner
+    Space.findById(req.param('id'), function(err, space) {
+      if (err) return next(err);
+      if (!space) return next();
+      return res.render('space/delete.jade', {space:space})
+    })
+  })
+
+  app.post('/space/remove/:id', loggedIn, function(req, res) {
+    Space.findOneAndRemove({_id: req.param('id'), contact: req.session.user}, null, function(err, space) {
+      if (err) return next(err);
+      if (!space) res.render('space/deleted.jade', {spaceNotFound: true});
+      else res.render('space/deleted.jade', {spaceDeleted: true, space: space});
+    })
+  })
+
   app.get('/space/list', function(req, res) {
     Space.find({}, null, { limit: 25 }, function (err, spaces) {
       if (err) return next(err);

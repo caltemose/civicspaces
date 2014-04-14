@@ -1,0 +1,34 @@
+extends ../layout
+
+block title
+  title #{sitetitle} | Delete Space Confirmation
+
+block content
+
+  div.container
+
+    h1 Delete Space Confirmation
+
+    div.section
+
+      div.row
+        div.col-md-6
+
+          h3 Are you certain you want to delete this space?
+          dl
+            dt Address:
+            dd= space.address
+
+            dt City:
+            dd= space.city
+
+            dt Zip Code:
+            dd= space.zip
+
+            dt Contact Email:
+            dd= space.contact
+
+          form(method="POST")
+            input(type="hidden" name="spaceId" value="#{space.id}") 
+            br 
+            input.btn.btn-success(type="submit" name="submit" value="Delete Space Permanently") 
