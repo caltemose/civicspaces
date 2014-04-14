@@ -10,7 +10,10 @@ var schema = mongoose.Schema({
   zip: { type: String, required: true, trim: true },
   contact: { type: String, lowercase: true, required: true, trim: true },
   //map coordinates [lat, lng]
-  geo: { type: Array },
+  geo: { 
+    lat: String,
+    lng: String
+  },
   //secondary properties
   type: { type: String, enum: ['Storefront', 'Office Only', 'Loft/Mixed Use', 'Land/Property']},
   leaseLength: { type: String, enum: ['Single-day Use', 'Multi-day Use', 'Multi-week Use', 'Long-term Use']},

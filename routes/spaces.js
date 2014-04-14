@@ -17,12 +17,6 @@ module.exports = function (app) {
   app.get('/space/create', function (req, res) {
     if (req.session.isLoggedIn) {
       res.render('space/create.jade');  
-      // var query = User.findById(req.session.user);
-      // query.exec(function(err, user) {
-      //   if (err) return next(err);
-      //   if (!user) return next();
-      //   res.render('space/create.jade');  
-      // })
     } else res.redirect('/signup');
   });
 

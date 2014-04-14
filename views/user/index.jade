@@ -25,9 +25,10 @@ block content
             |, #{space.zip} 
             a(href="/space/edit/#{space.id}")
               small [edit]
-            |  
-            a(href="/space/deactivate/#{space.id}") 
-              small [deactive]
+            //- @TODO Determine if space deactivation/activation is necessary
+            //- |  
+            //- a(href="/space/deactivate/#{space.id}") 
+            //-   small [deactive]
             |  
             a(href="/space/remove/#{space.id}")
               small [delete]

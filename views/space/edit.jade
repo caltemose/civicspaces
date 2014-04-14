@@ -42,6 +42,11 @@ block content
               input.form-control(name="zip" type="text" maxlength="10" data-validate-rules="required|zip" value="#{space.zip}")
               span
 
+            if space.geo
+              if space.geo.lat
+                input(type="hidden" value="#{space.geo.lat}" name="lat")
+              if space.geo.lng
+                input(type="hidden" value="#{space.geo.lng}" name="lng")
           
           div.col-md-6
             label
@@ -246,5 +251,10 @@ block content
 
       input.btn.btn-success(type="submit" name="submit" value="Save Listing") 
 
-
-      
+block scripts
+  //- script(src='https://maps.googleapis.com/maps/api/js?sensor=false')
+  script(src="/assets/js/edit-space.js")
+  //- script.
+  //-   cs.find.initialize('mapview', 33.7724417, -84.3279093);
+  //-   google.maps.event.addDomListener(window, 'load', cs.find.loadMaps);
+  //-     
