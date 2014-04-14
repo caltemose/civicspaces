@@ -17,6 +17,10 @@ basic fixes to responsiveness
 
 check next(), next(err) situations and resolve issues
 
+minimum main content height
+
+need content:
+  terms, privacy, contact
 
 
 ========== file @TODOs ==========
