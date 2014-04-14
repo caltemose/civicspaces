@@ -1,0 +1,20 @@
+extends ../layout
+
+block title
+  title #{sitetitle} | Submit a New Password
+
+block content
+
+  div.container
+
+    h1 Submit a New Password
+
+    p Change the password for user with email: #{email}
+    
+    form(method="POST")
+      label
+        | Type your new password:
+        input.form-control(type="password" name="pass" maxlength="64") 
+
+      input.btn.btn-primary.drop(type="submit" name="submit" value="Update Password")
+

@@ -9,9 +9,12 @@ block content
 
     h1 Lost Password - Email Sent
 
+    if err
+      div.alert.alert-danger= err
+      
     div.row
       div.col-md-5
-        if user
+        if success
           p Check your email for the password reset email and follow the instructions it contains.
         else
           p Something went wrong with the password reset email. Try again later or contact an administrator.

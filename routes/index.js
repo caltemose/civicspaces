@@ -7,7 +7,7 @@ var spaces = require('./spaces');
 var mongoose = require('mongoose');
 //var BlogPost = mongoose.model('BlogPost');
 
-module.exports = function (app) {
+module.exports = function (app, CONFIG) {
 
   // home page
   app.get('/', function (req, res, next) {
@@ -22,7 +22,7 @@ module.exports = function (app) {
   login(app);
 
   // password lost/reset
-  password(app);
+  password(app, CONFIG);
 
   // public static pages
   statics(app);

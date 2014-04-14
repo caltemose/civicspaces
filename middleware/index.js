@@ -2,7 +2,7 @@ var path = require('path');
 var express = require('express');
 var MongoStore = require('connect-mongo')(express);
 
-module.exports = function (app) {
+module.exports = function (app, CONFIG) {
   app.use(express.logger('dev'));
   //app.use(logfmt.requestLogger()); //heroku log format
 

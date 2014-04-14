@@ -8,6 +8,7 @@ require('express-mongoose');
 
 // @TODO add session stuff: db name, session secret, cookie maxAge
 var CONFIG = {
+  host: 'http://localhost',
   port: 3000,
   dbUri: 'mongodb://localhost/csproto'
 }
@@ -22,8 +23,8 @@ mongoose.connect(CONFIG.dbUri, function (err) {
   if (err) throw err;
   
   var app = express();
-  middleware(app);
-  routes(app);
+  middleware(app, CONFIG);
+  routes(app, CONFIG);
 
   app.listen(CONFIG.port, function () {
     console.log('CivicSpaces Server running on port ' + CONFIG.port);
