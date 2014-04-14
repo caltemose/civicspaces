@@ -4,6 +4,7 @@ var password = require('./password');
 var statics = require('./statics');
 var user = require('./user');
 var spaces = require('./spaces');
+var api = require('./api');
 var mongoose = require('mongoose');
 //var BlogPost = mongoose.model('BlogPost');
 
@@ -32,6 +33,9 @@ module.exports = function (app, CONFIG) {
 
   // space CRUD
   spaces(app);
+
+  // API routes
+  api(app);
 
   // error handlers
   errors(app);

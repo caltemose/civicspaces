@@ -18,17 +18,13 @@ block content
         li= user.phone
 
       h3 My Spaces
-      ul
+      ul.list-group
         each space in spaces 
-          li 
-            a(href="/space/view/#{space.id}") #{space.address}
-            |, #{space.zip} 
-            a(href="/space/edit/#{space.id}")
-              small [edit]
+          li.list-group-item
+            | #{space.address}, #{space.zip}  
+            a.btn.btn-success.btn-sm(href="/space/view/#{space.id}") view
+            | 
+            a.btn.btn-primary.btn-sm(href="/space/edit/#{space.id}") edit
+            | 
+            a.btn.btn-danger.btn-sm(href="/space/remove/#{space.id}") delete
             //- @TODO Determine if space deactivation/activation is necessary
-            //- |  
-            //- a(href="/space/deactivate/#{space.id}") 
-            //-   small [deactive]
-            |  
-            a(href="/space/remove/#{space.id}")
-              small [delete]
