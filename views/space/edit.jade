@@ -48,11 +48,9 @@ block content
               if space.geo.lng
                 input(type="hidden" value="#{space.geo.lng}" name="lng")
           
-          div.col-md-6
             label
               | *Contact Email: 
-              br 
-              | #{space.contact}
+              input.form-control(name="contact" type="text" value="#{space.contact}" disabled) 
 
 
       div.section

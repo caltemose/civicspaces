@@ -1,0 +1,39 @@
+========== fixes/additions ==========
+
+email functionality
+lost/reset password
+
+client-side form validation
+
+photo upload
+
+google maps api setup
+geo lookup
+/space/map
+
+basic fixes to responsiveness
+  tablet-sized main nav
+  fake/inactive/ineditable field display (contact info)
+
+check next(), next(err) situations and resolve issues
+
+
+
+========== file @TODOs ==========
+app.js
+  prod/dev env
+  heroku setup
+  config additions
+
+routes/spaces
+  handle various errors
+  validate zip, address
+  remove add contact to find query
+
+views/space/edit
+  enum/select intelligence
+
+views/user/index
+  do we need space deactivation?
+
+

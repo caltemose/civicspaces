@@ -32,6 +32,9 @@ label.terms {
 input.btn {
   font-size: 1.4em; }
 
+.form-control[disabled] {
+  color: #333; }
+
 .main {
   margin-top: -0.3em;
   padding-bottom: 4em;

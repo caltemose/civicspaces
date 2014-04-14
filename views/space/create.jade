@@ -47,6 +47,9 @@ block content
               input.form-control(name="zip" type="text" maxlength="10" data-validate-rules="required|zip")
               span
 
+            label
+              | *Contact Email: 
+              input.form-control(name="contact" type="text" value="#{session.user}" disabled) 
           
             label.terms
               input(name="terms" type="checkbox" data-validate-rules="checked") 
@@ -55,9 +58,6 @@ block content
               |  for listing properties on this site and am aware of my responsibilities as a property listing agent.
               span
 
-            label Contact: 
-              br 
-              | #{session.user}
                 
                 
 
