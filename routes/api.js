@@ -48,6 +48,21 @@ module.exports = function (app) {
       return res.json({success:true});
     })
   })
+
+  app.post('/api/user/update', function(req, res) {
+    var id = req.param('id');
+    var name = req.param('name');
+    var phone = req.param('phone');
+    //console.log(id, name, phone);
+    if (!id || (!name && !phone))
+      return res.json({err:"You must supply valid parameters for: email and (name or phone)"});
+    User.findByIdAndUpdate(id, {name:name, phone:phone}, null, function(err, user) {
+      if (err) return res.json({err:err});
+      if (!user) return res.json({err:"That user does not exist."});
+      return res.json({success:true});
+    });
+
+  })
 };
 
 // 5346d23473d314107e16447e
