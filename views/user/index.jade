@@ -11,37 +11,43 @@ block content
 
     div.section
 
-      h3 Contact Info
-      form#contactinfo
-        label 
-          | Name: 
-          input.form-control(type="text" name="name" value="#{user.name}")
-        label
-          | Email: 
-          input.form-control(type="text" name="email" value="#{user.id}" disabled)
-        label
-          | Phone: 
-          input.form-control(type="text" name="phone" value="#{user.phone}")
+      div.row
+        div.col-md-5
 
-        input.btn.btn-success.drop(type="submit" name="submit" value="Update Account Info") 
+          h3 Contact Info
+          form#contactinfo
+            label 
+              | Name: 
+              input.form-control(type="text" name="name" value="#{user.name}")
+            label
+              | Email: 
+              input.form-control(type="text" name="email" value="#{user.id}" disabled)
+            label
+              | Phone: 
+              input.form-control(type="text" name="phone" value="#{user.phone}")
 
+            input.btn.btn-success.drop(type="submit" name="submit" value="Update Account Info") 
 
-      h3 My Spaces
-      ul.list-group
-        each space in spaces 
-          li.list-group-item
-            p 
-              | #{space.address}, 
-              if space.city
-                | #{space.city}, 
-              | #{space.zip}
-            p 
-              a.btn.btn-info.btn-sm(href="/space/view/#{space.id}") view
-              | 
-              a.btn.btn-primary.btn-sm(href="/space/edit/#{space.id}") edit
-              | 
-              a.btn.btn-danger.btn-sm(href="/space/remove/#{space.id}") delete
-              //- @TODO Determine if space deactivation/activation is necessary
+        div.col-md-1
+
+        div.col-md-6
+
+          h3 My Spaces
+          ul.list-group
+            each space in spaces 
+              li.list-group-item
+                p 
+                  | #{space.address}, 
+                  if space.city
+                    | #{space.city}, 
+                  | #{space.zip}
+                p 
+                  a.btn.btn-info.btn-sm(href="/space/view/#{space.id}") view
+                  | 
+                  a.btn.btn-primary.btn-sm(href="/space/edit/#{space.id}") edit
+                  | 
+                  a.btn.btn-danger.btn-sm(href="/space/remove/#{space.id}") delete
+                  //- @TODO Determine if space deactivation/activation is necessary
 
 block scripts
   script(src='/assets/js/user_index.js')

@@ -61,7 +61,10 @@ module.exports = function (app, CONFIG) {
         mandrillClient.messages.send({"message": message, "async": false}, function(result) {
             console.log(result[0]);
             if (result[0].status == 'sent')
-              return res.render('password/lost-results.jade', {success:true});
+              User.findByIdAndUpdate(email, {resetSent: new Date()}, null, function(err, user) {
+                if (err) return res.render('password/lost-results.jade', {err:err});
+                return res.render('password/lost-results.jade', {success:true});
+              });
             else
               return res.render('password/lost-results.jade');
         }, function(e) {
@@ -77,13 +80,24 @@ module.exports = function (app, CONFIG) {
         p = req.param('p');
     if (!e || !p) return res.redirect('/')
     User.findById(e, function(err, user) {
-      if (err) next(err);
+      var data = {email: e, pass: p};
+      if (err) data.err = err;
       if (!user) return res.redirect('/');
-      res.render('password/reset.jade', {email: e, pass: p});  
+      if (user.resetSent) {
+        var now = new Date();
+        var hour = 3600000;
+        //console.log(now.getTime(), user.resetSent.getTime()+hour);
+        if (now.getTime() < user.resetSent.getTime() + hour)
+          data.resetActive = true;
+      }
+      res.render('password/reset.jade', data);
     })
   });
 
   app.post('/password/reset', function(req, res) {
+    var email = req.session.user;
+    var newPass = req.param('password');
+    
     // var data = {};
     // data.email = req.session.reset.email;
     // var newPass = req.param('password');

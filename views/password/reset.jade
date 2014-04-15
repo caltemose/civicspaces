@@ -9,12 +9,20 @@ block content
 
     h1 Submit a New Password
 
-    p Change the password for user with email: #{email}
-    
-    form(method="POST")
-      label
-        | Type your new password:
-        input.form-control(type="password" name="pass" maxlength="64") 
+    if resetActive
 
-      input.btn.btn-primary.drop(type="submit" name="submit" value="Update Password")
+      p Change the password for user with email: #{email}
+      
+      form(method="POST")
+        label
+          | Type your new password:
+          input.form-control(type="password" name="pass" maxlength="64") 
 
+        input.btn.btn-primary.drop(type="submit" name="submit" value="Update Password")
+
+    else
+      div.well.well-danger
+        p 
+          | Your password reset link has expired. If you need to reset your password, you must visit the  
+          a(href="/password/lost") Lost Password
+          |  page and resent the password reset email.
