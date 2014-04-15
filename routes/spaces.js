@@ -64,13 +64,14 @@ module.exports = function (app) {
     var zip = req.param('zip');
     if(address === '' || zip === '') {
       Space.findById(req.param('id'), function(err, space) {
-        if (err) return next(err);
+        if (err) return next(err); //@TODO next() is undefined, fix this error.
         if (!space) return next();
         return res.render('space/edit.jade', {noAddressZip:true, space:space})
       })
     } else {
       Space.edit(req, function(err) {
-        if (err) return next(err);
+        //if (err) return next(err); //@TODO next() is undefined, fix this error.
+        if (err) console.log(err);
         res.redirect('/space/edit/' + req.param('id'));
       })
     }

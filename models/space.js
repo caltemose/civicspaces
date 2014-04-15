@@ -39,12 +39,15 @@ var schema = mongoose.Schema({
 schema.statics.edit = function(req, callback) {
   var id = req.param('id');
   var author = req.session.user;
-  var query = { _id: id, contact: author };
+  // @TODO handle cases where editing is done by authors vs admins (who can edit spaces they don't own )
+  //var query = { _id: id, contact: author };
+  var query = { _id: id };
   var update = {};
   //req'd
   update.address = cleanString(req.param('address'));
   update.city = cleanString(req.param('city'));
   update.zip = cleanString(req.param('zip'));
+  update.contact = author;
   //optional
   if (req.param('type').length > 0) update.type = req.param('type');
   if (req.param('leaseLength').length > 0) update.leaseLength = req.param('leaseLength');

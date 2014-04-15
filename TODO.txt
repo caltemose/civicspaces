@@ -1,11 +1,12 @@
 ========== fixes/additions ==========
 
 email functionality
-lost/reset password
+lost/reset password, reset expiration
 
 client-side form validation
 
-photo upload
+photo upload - ajax
+  /api/upload/photo or /api/space/:id/photo
 
 google maps api setup
 geo lookup
@@ -13,7 +14,6 @@ geo lookup
 
 basic fixes to responsiveness
   tablet-sized main nav
-  fake/inactive/ineditable field display (contact info)
 
 check next(), next(err) situations and resolve issues
 
@@ -35,7 +35,7 @@ routes/spaces
   remove add contact to find query
 
 views/space/edit
-  enum/select intelligence
+  checkbox + radio intelligence/condense
 
 views/user/index
   do we need space deactivation?
