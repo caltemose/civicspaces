@@ -1,0 +1,17 @@
+extends ../layout
+
+block title
+  title #{sitetitle} | Password Change Results
+
+block content
+
+  div.container
+
+    h1 Password Change Results
+
+    if err
+      div.well.well-danger
+        p= err
+
+    if success
+      p Your password was updated successfully.

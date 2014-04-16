@@ -6,6 +6,11 @@ var mandrillClient = new mandrill.Mandrill('bt46HUzUpK24w1_7tIm3dA');
 var mongoose = require('mongoose');
 var User = mongoose.model('User');
 
+var cleanString = require('../helpers/cleanString');
+var hash = require('../helpers/hash');
+var crypto = require('crypto');
+
+
 module.exports = function (app, CONFIG) {
 
   app.get('/password/lost', function (req, res) {
@@ -76,47 +81,40 @@ module.exports = function (app, CONFIG) {
   })
 
   app.get('/password/reset', function (req, res) {
-    var e = req.param('e'),
-        p = req.param('p');
-    if (!e || !p) return res.redirect('/')
-    User.findById(e, function(err, user) {
-      var data = {email: e, pass: p};
+    var email = cleanString(req.param('e')),
+        pass = cleanString(req.param('p'));
+    if (!email || !pass) return res.redirect('/')
+    User.findById(email, function(err, user) {
+      var data = {email: email, pass: pass};
       if (err) data.err = err;
       if (!user) return res.redirect('/');
       if (user.resetSent) {
         var now = new Date();
         var hour = 3600000;
-        //console.log(now.getTime(), user.resetSent.getTime()+hour);
-        if (now.getTime() < user.resetSent.getTime() + hour)
+        // @TODO store password reset length in CONFIG
+        if (now.getTime() < user.resetSent.getTime() + 48*hour)
           data.resetActive = true;
+        pass = pass.replace(/\s/g, '+');
+        if (user.hash == pass)
+          data.passMatch = true;
       }
       res.render('password/reset.jade', data);
     })
   });
 
   app.post('/password/reset', function(req, res) {
-    var email = req.session.user;
-    var newPass = req.param('password');
-    
-    // var data = {};
-    // data.email = req.session.reset.email;
-    // var newPass = req.param('password');
-    // req.session.destroy();
-    // User.findById(data.email, function(err, user) {
-    //   if (err) {
-    //     data.err = err;
-    //     res.render('password/reset.jade', data);
-    //   } else {
-    //     user.pass = newPass;
-    //     user.save(function(err) {
-    //       if(err) data.err = err;
-    //       else 
-
-    //     })
-    //   }
-    // })
-
+    var email = cleanString(req.param('email')),
+        pass = cleanString(req.param('pass'));
+    if (!email || !pass) return res.redirect('/');
+    User.findById(email, function(err, user) {
+      if (err) return res.render('password/reset-results.jade', {err:err});;
+      if (!user) return res.render('password/reset-results.jade', {err:"User could not be found."});
+      user.update({hash: hash(pass, user.salt), $unset:{resetSent:1}}, null, function(err, affected, response) {
+        if (err) return res.render('password/reset-results.jade', {err:err});
+        if (affected < 1) return res.render('password/reset-results.jade', {err:"Your password could not be updated."});
+        return res.render('password/reset-results.jade', {success:true})
+      })
+    })
   })
-
 
 }

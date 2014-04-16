@@ -9,7 +9,7 @@ block content
 
     h1 Submit a New Password
 
-    if resetActive
+    if resetActive && passMatch
 
       p Change the password for user with email: #{email}
       
@@ -18,11 +18,20 @@ block content
           | Type your new password:
           input.form-control(type="password" name="pass" maxlength="64") 
 
+        input(type="hidden" name="email" value="#{email}")
+
         input.btn.btn-primary.drop(type="submit" name="submit" value="Update Password")
 
-    else
+    else if resetActive
+      div.well.well-danger
+        p 
+          | Your password reset link is broken (maybe you've already used it to change your password). If you need to reset your password, you must visit the  
+          a(href="/password/lost") Lost Password
+          |  page and resend the password reset email.
+
+    else if passMatch
       div.well.well-danger
         p 
           | Your password reset link has expired. If you need to reset your password, you must visit the  
           a(href="/password/lost") Lost Password
-          |  page and resent the password reset email.
+          |  page and resend the password reset email.
