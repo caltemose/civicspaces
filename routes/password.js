@@ -1,15 +1,11 @@
-//var mailer   = require("mailer")
-
-//var mandrillUser = "chad@chadilla.com", mandrillKey = "bt46HUzUpK24w1_7tIm3dA"; //test key, will be expired
 var mandrill = require('mandrill-api/mandrill');
+// @TODO this is not the final api key. need secure way of handling this.
 var mandrillClient = new mandrill.Mandrill('bt46HUzUpK24w1_7tIm3dA');
 var mongoose = require('mongoose');
 var User = mongoose.model('User');
 
 var cleanString = require('../helpers/cleanString');
 var hash = require('../helpers/hash');
-var crypto = require('crypto');
-
 
 module.exports = function (app, CONFIG) {
 
@@ -97,6 +93,10 @@ module.exports = function (app, CONFIG) {
         pass = pass.replace(/\s/g, '+');
         if (user.hash == pass)
           data.passMatch = true;
+      } else {
+        // @TODO fix this horrible shit naming/logic. Ugh.
+        data.resetActive = false;
+        data.passMatch = true;
       }
       res.render('password/reset.jade', data);
     })

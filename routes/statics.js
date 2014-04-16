@@ -12,4 +12,8 @@ module.exports = function (app) {
     res.render('statics/privacy.jade');
   });
 
+  app.get('/contact', function (req, res) {
+    res.render('statics/contact.jade');
+  });
+
 }

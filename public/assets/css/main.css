@@ -36,6 +36,7 @@ input.btn {
   color: #333; }
 
 .main {
+  min-height: 40em;
   margin-top: -0.3em;
   padding-bottom: 4em;
   background: #fff; }

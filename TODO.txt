@@ -1,7 +1,8 @@
 ========== fixes/additions ==========
 
-email functionality
-lost/reset password, reset expiration
+contact page stub
+
+check next(), next(err) situations and resolve issues
 
 client-side form validation
 
@@ -14,10 +15,6 @@ geo lookup
 
 basic fixes to responsiveness
   tablet-sized main nav
-
-check next(), next(err) situations and resolve issues
-
-minimum main content height
 
 need content:
   terms, privacy, contact
