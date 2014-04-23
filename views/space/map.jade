@@ -6,7 +6,9 @@ block title
 block content
 
   div.container
-    
+  
+    h1 Available Spaces
+
     div#googlemap(style="height:400px")
     
 
@@ -14,5 +16,7 @@ block scripts
   script(src='https://maps.googleapis.com/maps/api/js?sensor=false')
   script(src="/assets/js/cs.map.js")
   script.
-    cs.map.init('#googlemap', 33.7811643, -84.38362970000003);
-    
+    $(document).ready(function(){
+      cs.map.init('#googlemap', 33.7811643, -84.38362970000003);
+      cs.map.initMultiple();
+    })

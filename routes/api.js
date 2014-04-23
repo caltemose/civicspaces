@@ -16,8 +16,8 @@ module.exports = function (app) {
 
   app.post('/api/add-geo', function (req, res) {
     var id = req.param('id');
-    var lat = req.param('lat');
-    var lng = req.param('lng');
+    var lat = parseFloat(req.param('lat'));
+    var lng = parseFloat(req.param('lng'));
 
     if (!id)
       return res.json({err:"You must provide a valid space id."});
@@ -53,7 +53,7 @@ module.exports = function (app) {
     var id = req.param('id');
     var name = req.param('name');
     var phone = req.param('phone');
-    //console.log(id, name, phone);
+    
     if (!id || (!name && !phone))
       return res.json({err:"You must supply valid parameters for: email and (name or phone)"});
     User.findByIdAndUpdate(id, {name:name, phone:phone}, null, function(err, user) {
@@ -61,7 +61,31 @@ module.exports = function (app) {
       if (!user) return res.json({err:"That user does not exist."});
       return res.json({success:true});
     });
+  })
 
+  app.get('/api/properties/bounded', function(req, res) {
+    var ne_lat = req.param('ne_lat');
+    var ne_lng = req.param('ne_lng');
+    var sw_lat = req.param('sw_lat');
+    var sw_lng = req.param('sw_lng');
+    if (!ne_lat || !ne_lng || !sw_lat || !sw_lng)
+      return res.jsonp({err: 'missing coordinates'})
+    // @TODO search for properties within provided lat/lng bounds
+    Space.find()
+      .where('geo.lat').gt(sw_lat).lt(ne_lat)
+      .where('geo.lng').gt(sw_lng).lt(ne_lng)
+      .limit(20)
+      .select('address city zip contact geo type')
+      .exec(function(err, spaces) {
+        console.log('space query');
+        if (err)
+          return res.jsonp({err:err})
+        var data = {spaces:[]};
+        if (spaces && spaces.length > 0)
+          data = {spaces:spaces};          
+        return res.jsonp(data);
+      })
+    
   })
 };
 

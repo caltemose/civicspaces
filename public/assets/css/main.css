@@ -151,3 +151,6 @@ input.btn {
         .footer ul > li {
           display: block;
           padding: 0.3em 0; } }
+
+.spaceview {
+  height: 300px; }

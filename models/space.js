@@ -11,8 +11,8 @@ var schema = mongoose.Schema({
   contact: { type: String, lowercase: true, required: true, trim: true },
   //map coordinates [lat, lng]
   geo: { 
-    lat: String,
-    lng: String
+    lat: Number,
+    lng: Number
   },
   //secondary properties
   type: { type: String, enum: ['Storefront', 'Office Only', 'Loft/Mixed Use', 'Land/Property']},

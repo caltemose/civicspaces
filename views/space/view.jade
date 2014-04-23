@@ -11,103 +11,127 @@ block content
 
     div.section
 
+      
+      div#googlemap.spaceview
+
       div.row
         div.col-md-6
 
-          h3 Location and Contact Info
-          dl
-            dt Address:
-            dd= space.address
+          h3 Address
 
-            dt City:
-            dd= space.city
+          p
+            strong
+              | #{space.address}
+              br 
+              if space.city
+                | #{space.city}, 
+              | #{space.zip}
 
-            dt Zip Code:
-            dd= space.zip
-
-            dt Contact Email:
-            dd= space.contact
-
-            dt LatLng:
-            dd #{space.geo.lat}, #{space.geo.lng}
+          p
+            | Contact: 
+            strong #{space.contact}
+          //- p 
+          //-   small LatLng: #{space.geo.lat}, #{space.geo.lng}
 
 
           h3 Size and Type
-          dl
-            dt Type of Space:
-            dd= space.type
             
-            dt Preferred length of lease:
-            dd= space.leaseLength
+          p 
+            | Type of Space: 
+            strong #{space.type}
             
-            dt 
-              | Area 
-              small (square feet):
-            dd= space.area
+          p 
+            | Preferred length of lease: 
+            strong #{space.leaseLength}
+            
+          p 
+            | Area (sq ft): 
+            strong #{space.area}
 
-            dt Maximum occupancy:
-            dd= space.maxOccupants
+          p 
+            | Maximum occupancy: 
+            strong #{space.maxOccupants}
 
-      
+        div.col-md-6
           h3 Allowed Uses
-          dl
-            dt Food and beverages allowed?  
-            if space.allowed.foodBev
-              dd Yes
-            else
-              dd No
+          p
+            | Food and beverages allowed?   
+            strong
+              if space.allowed.foodBev
+                | Yes
+              else
+                | No
 
-            dt Alcohol allowed? 
-            if space.allowed.alcohol
-              dd Yes
-            else
-              dd No
+          p 
+            | Alcohol allowed?  
+            strong
+              if space.allowed.alcohol
+                | Yes
+              else
+                | No
 
-            dt Music allowed?
-            if space.allowed.music
-              dd Yes
-            else
-              dd No
+          p
+            | Music allowed? 
+            strong
+              if space.allowed.music
+                | Yes
+              else
+                | No
             
-            dt Allowed modifications of space:
-            dd= space.allowed.modification
+          p
+            | Allowed modifications of space: 
+            strong= space.allowed.modification
 
             
           h3 Amenities
-          dl
-            dt Wireless internet?
-            if space.amenities.wifi
-              dd Yes
-            else
-              dd No
+          p
+            | Wireless internet? 
+            strong
+              if space.amenities.wifi
+                | Yes
+              else
+                | No
 
-            dt Parking on site?
-            if space.amenities.parkingOnSite
-              dd Yes
-            else 
-              dd No
+          p
+            | Parking on site? 
+            strong
+              if space.amenities.parkingOnSite
+                | Yes
+              else 
+                | No
 
-            dt Handicap access?
-            if space.amenities.handicap
-              dd Yes
-            else
-              dd No
-            
-            dt Furnished?
-            if space.amenities.furnished
-              dd Yes
-            else
-              dd No
+          p
+            | Handicap access? 
+            strong
+              if space.amenities.handicap
+                | Yes
+              else
+                | No
+          
+          p  
+            | Furnished? 
+            strong
+              if space.amenities.furnished
+                | Yes
+              else
+                | No
     
           
-            dl
-              dt Bathroom facilities: 
-              dd= space.amenities.bathroom
+          p
+            | Bathroom facilities:  
+            strong= space.amenities.bathroom
 
-            dl
-              dt Kitchen facilities:
-              dd= space.amenities.kitchen
+          p
+            | Kitchen facilities: 
+            strong= space.amenities.kitchen
 
-          h3 Description
+      if space.description
+        div.row
+          div.col-md-6
+            h3 Description
+            div.well= space.description
 
-          div.well= space.description
+block scripts
+  script(src='https://maps.googleapis.com/maps/api/js?sensor=false')
+  script(src="/assets/js/cs.map.js")
+  script(src="/assets/js/view_space.js")

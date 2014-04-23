@@ -5,11 +5,13 @@
   }
 
   this.cs.map = {
+    markers: [],
     init: function(container, lat, lng, zoom) {
       var options;
       if (zoom == null) {
         zoom = 12;
       }
+      console.log('cs.map.init');
       cs.map.container = $(container);
       options = {
         center: cs.map.makeLatLng(lat, lng),
@@ -17,8 +19,68 @@
       };
       return cs.map.googlemap = new google.maps.Map(cs.map.container[0], options);
     },
+    initMultiple: function() {
+      return google.maps.event.addListener(cs.map.googlemap, 'bounds_changed', cs.map.handleBoundsUpdate);
+    },
     makeLatLng: function(lat, lng) {
       return new google.maps.LatLng(lat, lng);
+    },
+    makeMarkerOptions: function(lat, lng, label) {
+      var options;
+      return options = {
+        position: cs.map.makeLatLng(lat, lng),
+        map: cs.map.googlemap,
+        title: label
+      };
+    },
+    addMarker: function(lat, lng, label) {
+      var options;
+      if (label == null) {
+        label = 'unlabeled marker';
+      }
+      options = cs.map.makeMarkerOptions(lat, lng, label);
+      return cs.map.markers.push(new google.maps.Marker(options));
+    },
+    getBounds: function() {
+      return cs.map.googlemap.getBounds();
+    },
+    handleBoundsUpdate: function() {
+      var bounds;
+      bounds = cs.map.getBounds();
+      return cs.map.requestSpaces(bounds.getNorthEast(), bounds.getSouthWest());
+    },
+    requestSpaces: function(ne, sw) {
+      var bounds;
+      console.log('requestSpaces');
+      bounds = {
+        ne_lat: ne.lat(),
+        ne_lng: ne.lng(),
+        sw_lat: sw.lat(),
+        sw_lng: sw.lng()
+      };
+      return cs.map.request = $.getJSON('/api/properties/bounded', bounds, cs.map.displaySpaces);
+    },
+    displaySpace: function(space) {
+      return console.log(space.address);
+    },
+    displaySpaces: function(data) {
+      var space, _i, _len, _ref, _results;
+      console.log('displaySpaces');
+      if (data.err) {
+        console.log(err);
+        return;
+      }
+      if (data.spaces && data.spaces.length > 0) {
+        _ref = data.spaces;
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          space = _ref[_i];
+          _results.push(cs.map.displaySpace(space));
+        }
+        return _results;
+      } else {
+        return console.log('no Spaces found in given boundaries');
+      }
     }
   };
 
