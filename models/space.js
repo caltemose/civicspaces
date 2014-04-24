@@ -17,7 +17,7 @@ var schema = mongoose.Schema({
   //secondary properties
   type: { type: String, enum: ['Storefront', 'Office Only', 'Loft/Mixed Use', 'Land/Property']},
   leaseLength: { type: String, enum: ['Single-day Use', 'Multi-day Use', 'Multi-week Use', 'Long-term Use']},
-  area: {type:String},
+  area: {type:Number},
   maxOccupants: {type:Number},
   allowed: {
     foodBev: {type:Boolean},

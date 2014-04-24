@@ -70,24 +70,19 @@ module.exports = function (app) {
     var sw_lng = req.param('sw_lng');
     if (!ne_lat || !ne_lng || !sw_lat || !sw_lng)
       return res.jsonp({err: 'missing coordinates'})
-    // @TODO search for properties within provided lat/lng bounds
+
     Space.find()
       .where('geo.lat').gt(sw_lat).lt(ne_lat)
       .where('geo.lng').gt(sw_lng).lt(ne_lng)
       .limit(20)
-      .select('address city zip contact geo type')
+      .select('address city zip contact geo type leaseLength')
       .exec(function(err, spaces) {
-        console.log('space query');
-        if (err)
-          return res.jsonp({err:err})
+        if (err) return res.jsonp({err:err})
         var data = {spaces:[]};
-        if (spaces && spaces.length > 0)
-          data = {spaces:spaces};          
+        if (spaces && spaces.length > 0) data = {spaces:spaces};
         return res.jsonp(data);
       })
-    
+
+          
   })
 };
-
-// 5346d23473d314107e16447e
-// curl --data "id=5346d23473d314107e16447e&lat=-84.38362970000003&lng=33.7811643" http://localhost:3000/api/add-geo

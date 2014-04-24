@@ -6,33 +6,38 @@
 
   init: (container, lat, lng, zoom = 12) ->
     console.log 'cs.map.init'
-    cs.map.container = $ container
+    @container = $ container
     options = 
       center: cs.map.makeLatLng lat, lng
       zoom: zoom
-    cs.map.googlemap = new google.maps.Map cs.map.container[0], options
+    @googlemap = new google.maps.Map @container[0], options
 
-  initMultiple: () ->
-    google.maps.event.addListener cs.map.googlemap, 'bounds_changed', cs.map.handleBoundsUpdate
+  initMultiple: (container) ->
+    @resultsContainer = $ container
+    google.maps.event.addListener @googlemap, 'bounds_changed', @handleBoundsUpdate
 
   makeLatLng: (lat, lng) ->
     new google.maps.LatLng(lat, lng)
 
   makeMarkerOptions: (lat, lng, label) ->
     options = 
-      position: cs.map.makeLatLng lat, lng
-      map: cs.map.googlemap
+      position: @makeLatLng lat, lng
+      map: @googlemap
       title: label
 
-  addMarker: (lat, lng, label = 'unlabeled marker') ->
-    options = cs.map.makeMarkerOptions lat, lng, label
-    cs.map.markers.push new google.maps.Marker options
+  addMarker: (lat, lng, label = 'unlabeled marker', infoHtml) ->
+    options = @makeMarkerOptions lat, lng, label
+    marker = new google.maps.Marker options
+    @markers.push marker
+    google.maps.event.addListener marker, 'click', ->
+      cs.map.infoWindow.setContent infoHtml
+      cs.map.infoWindow.open cs.map.googlemap, marker
 
   getBounds: ->
-    cs.map.googlemap.getBounds()
+    @googlemap.getBounds()
 
   handleBoundsUpdate: ->
-    bounds = cs.map.getBounds()
+    bounds = @getBounds()
     cs.map.requestSpaces bounds.getNorthEast(), bounds.getSouthWest()
 
   requestSpaces: (ne, sw) ->
@@ -43,20 +48,39 @@
       sw_lat: sw.lat()
       sw_lng: sw.lng()
     
-    cs.map.request = $.getJSON '/api/properties/bounded', bounds, cs.map.displaySpaces
+    @request = $.getJSON '/api/properties/bounded', bounds, @displaySpaces
 
   displaySpace: (space) ->
-    console.log space.address
-    # need to pass: address, lat/lng, photourl, space type, length of lease
+    info = '<div class="mapInfoWindow">'
+    info += '<p>' + space.address + '<br>' + space.city + ', ' + space.zip + '</p>'
+    @addMarker space.geo.lat, space.geo.lng, space.address, info
+    @displaySpaceHtml space
 
   displaySpaces: (data) ->
-    console.log 'displaySpaces'
     if data.err
       console.log err
       return
     
+    if !cs.map.infoWindow
+      options = 
+        content: 'default'
+      cs.map.infoWindow = new google.maps.InfoWindow options
+
+    cs.map.resultsContainer.html('')
+
     if data.spaces and data.spaces.length > 0
       cs.map.displaySpace space for space in data.spaces
     else
       console.log 'no Spaces found in given boundaries'
     
+  displaySpaceHtml: (space) ->
+    html = '<div class="col-sm-6"><div class="well result clearfix">'
+    # img.pull-right(src='' alt='')
+    html += '<h4>' + space.address + '</h4>'
+    html += '<ul>'
+    if space.type 
+      html += '<li>' + space.type + '</li>'
+    if space.leaseLength
+      html += '<li>' + space.leaseLength + '</li>'
+    html += '</ul></div></div>'
+    @resultsContainer.append html

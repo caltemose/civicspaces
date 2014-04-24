@@ -10,6 +10,8 @@ block content
     h1 Available Spaces
 
     div#googlemap(style="height:400px")
+
+    div#mapresults.row
     
 
 block scripts
@@ -17,6 +19,7 @@ block scripts
   script(src="/assets/js/cs.map.js")
   script.
     $(document).ready(function(){
+      // @TODO Determine where we should store the map default/origin options
       cs.map.init('#googlemap', 33.7811643, -84.38362970000003);
-      cs.map.initMultiple();
+      cs.map.initMultiple('#mapresults');
     })

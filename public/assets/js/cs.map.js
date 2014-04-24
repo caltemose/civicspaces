@@ -12,15 +12,16 @@
         zoom = 12;
       }
       console.log('cs.map.init');
-      cs.map.container = $(container);
+      this.container = $(container);
       options = {
         center: cs.map.makeLatLng(lat, lng),
         zoom: zoom
       };
-      return cs.map.googlemap = new google.maps.Map(cs.map.container[0], options);
+      return this.googlemap = new google.maps.Map(this.container[0], options);
     },
-    initMultiple: function() {
-      return google.maps.event.addListener(cs.map.googlemap, 'bounds_changed', cs.map.handleBoundsUpdate);
+    initMultiple: function(container) {
+      this.resultsContainer = $(container);
+      return google.maps.event.addListener(this.googlemap, 'bounds_changed', this.handleBoundsUpdate);
     },
     makeLatLng: function(lat, lng) {
       return new google.maps.LatLng(lat, lng);
@@ -28,25 +29,30 @@
     makeMarkerOptions: function(lat, lng, label) {
       var options;
       return options = {
-        position: cs.map.makeLatLng(lat, lng),
-        map: cs.map.googlemap,
+        position: this.makeLatLng(lat, lng),
+        map: this.googlemap,
         title: label
       };
     },
-    addMarker: function(lat, lng, label) {
-      var options;
+    addMarker: function(lat, lng, label, infoHtml) {
+      var marker, options;
       if (label == null) {
         label = 'unlabeled marker';
       }
-      options = cs.map.makeMarkerOptions(lat, lng, label);
-      return cs.map.markers.push(new google.maps.Marker(options));
+      options = this.makeMarkerOptions(lat, lng, label);
+      marker = new google.maps.Marker(options);
+      this.markers.push(marker);
+      return google.maps.event.addListener(marker, 'click', function() {
+        cs.map.infoWindow.setContent(infoHtml);
+        return cs.map.infoWindow.open(cs.map.googlemap, marker);
+      });
     },
     getBounds: function() {
-      return cs.map.googlemap.getBounds();
+      return this.googlemap.getBounds();
     },
     handleBoundsUpdate: function() {
       var bounds;
-      bounds = cs.map.getBounds();
+      bounds = this.getBounds();
       return cs.map.requestSpaces(bounds.getNorthEast(), bounds.getSouthWest());
     },
     requestSpaces: function(ne, sw) {
@@ -58,18 +64,28 @@
         sw_lat: sw.lat(),
         sw_lng: sw.lng()
       };
-      return cs.map.request = $.getJSON('/api/properties/bounded', bounds, cs.map.displaySpaces);
+      return this.request = $.getJSON('/api/properties/bounded', bounds, this.displaySpaces);
     },
     displaySpace: function(space) {
-      return console.log(space.address);
+      var info;
+      info = '<div class="mapInfoWindow">';
+      info += '<p>' + space.address + '<br>' + space.city + ', ' + space.zip + '</p>';
+      this.addMarker(space.geo.lat, space.geo.lng, space.address, info);
+      return this.displaySpaceHtml(space);
     },
     displaySpaces: function(data) {
-      var space, _i, _len, _ref, _results;
-      console.log('displaySpaces');
+      var options, space, _i, _len, _ref, _results;
       if (data.err) {
         console.log(err);
         return;
       }
+      if (!cs.map.infoWindow) {
+        options = {
+          content: 'default'
+        };
+        cs.map.infoWindow = new google.maps.InfoWindow(options);
+      }
+      cs.map.resultsContainer.html('');
       if (data.spaces && data.spaces.length > 0) {
         _ref = data.spaces;
         _results = [];
@@ -81,6 +97,20 @@
       } else {
         return console.log('no Spaces found in given boundaries');
       }
+    },
+    displaySpaceHtml: function(space) {
+      var html;
+      html = '<div class="col-sm-6"><div class="well result clearfix">';
+      html += '<h4>' + space.address + '</h4>';
+      html += '<ul>';
+      if (space.type) {
+        html += '<li>' + space.type + '</li>';
+      }
+      if (space.leaseLength) {
+        html += '<li>' + space.leaseLength + '</li>';
+      }
+      html += '</ul></div></div>';
+      return this.resultsContainer.append(html);
     }
   };
 
