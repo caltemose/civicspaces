@@ -21,8 +21,6 @@ var middleware = require('./middleware');
 
 mongoose.connect(CONFIG.dbUri, function (err) {
   if (err) throw err;
-  
-  console.log(CONFIG.port);
 
   var app = express();
   middleware(app, CONFIG);

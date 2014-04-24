@@ -15,15 +15,16 @@ module.exports = function (app, CONFIG) {
   var db = 'csproto';
   var hour = 3600000;
   app.use(express.cookieParser());
-  app.use(express.session({
-    secret: secret, 
-    store: new MongoStore({
-      db: db
-    }),
-    cookie: {
-      maxAge: hour
-    }
-  }));
+  app.use(express.session({secret: secret}));
+  // app.use(express.session({
+  //   secret: secret, 
+  //   store: new MongoStore({
+  //     db: db
+  //   }),
+  //   cookie: {
+  //     maxAge: hour
+  //   }
+  // }));
   app.use(express.urlencoded());
 
   app.locals.sitetitle = 'CivicSpaces';
