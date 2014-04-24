@@ -52,7 +52,8 @@
 
   displaySpace: (space) ->
     info = '<div class="mapInfoWindow">'
-    info += '<p>' + space.address + '<br>' + space.city + ', ' + space.zip + '</p>'
+    info += '<p><a href="/space/view/' + space._id + '">'
+    info += space.address + '</a><br>' + space.city + ', ' + space.zip + '</p>'
     @addMarker space.geo.lat, space.geo.lng, space.address, info
     @displaySpaceHtml space
 
@@ -76,7 +77,8 @@
   displaySpaceHtml: (space) ->
     html = '<div class="col-sm-6"><div class="well result clearfix">'
     # img.pull-right(src='' alt='')
-    html += '<h4>' + space.address + '</h4>'
+    html += '<h4><a href="/space/view/' + space._id + '">'
+    html += space.address + '</a></h4>'
     html += '<ul>'
     if space.type 
       html += '<li>' + space.type + '</li>'

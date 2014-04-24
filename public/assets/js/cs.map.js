@@ -69,7 +69,8 @@
     displaySpace: function(space) {
       var info;
       info = '<div class="mapInfoWindow">';
-      info += '<p>' + space.address + '<br>' + space.city + ', ' + space.zip + '</p>';
+      info += '<p><a href="/space/view/' + space._id + '">';
+      info += space.address + '</a><br>' + space.city + ', ' + space.zip + '</p>';
       this.addMarker(space.geo.lat, space.geo.lng, space.address, info);
       return this.displaySpaceHtml(space);
     },
@@ -101,7 +102,8 @@
     displaySpaceHtml: function(space) {
       var html;
       html = '<div class="col-sm-6"><div class="well result clearfix">';
-      html += '<h4>' + space.address + '</h4>';
+      html += '<h4><a href="/space/view/' + space._id + '">';
+      html += space.address + '</a></h4>';
       html += '<ul>';
       if (space.type) {
         html += '<li>' + space.type + '</li>';
