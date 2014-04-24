@@ -10,7 +10,8 @@ require('express-mongoose');
 var CONFIG = {
   host: 'http://localhost',
   port: Number(process.env.PORT || 3000),
-  dbUri: 'mongodb://localhost/csproto'
+  dbUri: process.env.MONGOLAB_URI ||
+  process.env.MONGOHQ_URL || 'mongodb://localhost/csproto'
 }
 mongoose.set('debug', true);
 
