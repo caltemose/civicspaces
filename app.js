@@ -9,11 +9,10 @@ require('express-mongoose');
 // @TODO add session stuff: db name, session secret, cookie maxAge
 var CONFIG = {
   host: 'http://localhost',
-  port: 3000,
+  port: Number(process.env.PORT || 3000),
   dbUri: 'mongodb://localhost/csproto'
 }
 mongoose.set('debug', true);
-
 
 var models = require('./models');
 var routes = require('./routes');
@@ -22,6 +21,8 @@ var middleware = require('./middleware');
 mongoose.connect(CONFIG.dbUri, function (err) {
   if (err) throw err;
   
+  console.log(CONFIG.port);
+
   var app = express();
   middleware(app, CONFIG);
   routes(app, CONFIG);
