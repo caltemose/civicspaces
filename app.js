@@ -6,8 +6,9 @@ require('express-mongoose');
 
 // @TODO prod/dev environment setup
 
-// @TODO add session stuff: db name, session secret, cookie maxAge
+
 var CONFIG = {
+  // @TODO CONFIG.host needs to be an ENV variable
   host: 'http://localhost',
   port: Number(process.env.PORT || 3000),
   dbUri: process.env.MONGOLAB_URI ||

@@ -1,4 +1,5 @@
 var errors = require('./errors');
+var setup = require('./setup');
 var login = require('./login');
 var password = require('./password');
 var statics = require('./statics');
@@ -18,6 +19,9 @@ module.exports = function (app, CONFIG) {
     // })
     res.render('home.jade');
   })
+
+  //development only
+  setup(app);
 
   // login / logout routes
   login(app);
