@@ -5,23 +5,85 @@
   }
 
   this.cs.map = {
+    defaultLat: 33.7811643,
+    defaultLng: -84.38362970000003,
     markers: [],
-    init: function(container, lat, lng, zoom) {
+    init: function(container, lat, lng, marker, zoom) {
       var options;
+      if (marker == null) {
+        marker = null;
+      }
       if (zoom == null) {
         zoom = 12;
       }
-      console.log('cs.map.init');
       this.container = $(container);
       options = {
         center: cs.map.makeLatLng(lat, lng),
         zoom: zoom
       };
-      return this.googlemap = new google.maps.Map(this.container[0], options);
+      this.googlemap = new google.maps.Map(this.container[0], options);
+      if (marker) {
+        return cs.map.addMarker(lat, lng, marker.label, marker.infoHtml);
+      }
     },
     initMultiple: function(container) {
       this.resultsContainer = $(container);
       return google.maps.event.addListener(this.googlemap, 'bounds_changed', this.handleBoundsUpdate);
+    },
+    drawMap: function(lat, lng, marker) {
+      var m, _i, _len, _ref;
+      if (marker == null) {
+        marker = null;
+      }
+      if (cs.map.markers.length) {
+        _ref = cs.map.markers;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          m = _ref[_i];
+          cs.map.removeMarker(m);
+        }
+        cs.map.markers.length = 0;
+      }
+      cs.map.googlemap.setCenter(cs.map.makeLatLng(lat, lng));
+      cs.map.googlemap.setZoom(15);
+      if (marker) {
+        return cs.map.addMarker(lat, lng, marker.label, marker.infoHtml);
+      }
+    },
+    getLocalityFromComponents: function(components) {
+      var component, locality, _i, _len;
+      for (_i = 0, _len = components.length; _i < _len; _i++) {
+        component = components[_i];
+        if (component.types[0] === 'locality') {
+          locality = cs.map.getLocality(component);
+        }
+      }
+      return locality;
+    },
+    getLocality: function(component) {
+      return component.long_name;
+    },
+    getGeo: function(address, callback) {
+      var geocoder;
+      geocoder = cs.map.geocoder || new google.maps.Geocoder();
+      return geocoder.geocode({
+        address: address
+      }, function(results, status) {
+        var data, loc;
+        if (status === google.maps.GeocoderStatus.OK) {
+          loc = results[0].geometry.location;
+          data = {
+            lat: loc.k,
+            lng: loc.A,
+            locality: cs.map.getLocalityFromComponents(results[0].address_components)
+          };
+          if (results[0].partial_match) {
+            data.partial_match = true;
+          }
+          return callback(null, data);
+        } else {
+          return callback(status, null);
+        }
+      });
     },
     makeLatLng: function(lat, lng) {
       return new google.maps.LatLng(lat, lng);
@@ -39,13 +101,23 @@
       if (label == null) {
         label = 'unlabeled marker';
       }
+      if (!cs.map.infoWindow) {
+        cs.map.infoWindow = new google.maps.InfoWindow({
+          content: 'default'
+        });
+      }
       options = this.makeMarkerOptions(lat, lng, label);
       marker = new google.maps.Marker(options);
-      this.markers.push(marker);
+      cs.map.markers.push(marker);
       return google.maps.event.addListener(marker, 'click', function() {
+        console.log('click');
         cs.map.infoWindow.setContent(infoHtml);
         return cs.map.infoWindow.open(cs.map.googlemap, marker);
       });
+    },
+    removeMarker: function(marker) {
+      marker.setMap(null);
+      return marker = null;
     },
     getBounds: function() {
       return this.googlemap.getBounds();

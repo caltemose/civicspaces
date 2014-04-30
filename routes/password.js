@@ -1,6 +1,6 @@
 var mandrill = require('mandrill-api/mandrill');
-// @TODO this is not the final api key. need secure way of handling this.
-var mandrillClient = new mandrill.Mandrill('bt46HUzUpK24w1_7tIm3dA');
+//@TODO determine what to do when process.env.MANDRILL_KEY is not present
+var mandrillClient = new mandrill.Mandrill(process.env.MANDRILL_KEY);
 var mongoose = require('mongoose');
 var User = mongoose.model('User');
 
@@ -20,8 +20,10 @@ module.exports = function (app, CONFIG) {
       if (err) return next(err);
       if (!user) return res.render('password/lost.jade', {noUser:true});
       else {
+        //@TODO Is port optional in reset link? Should we ditch it?
         var link = CONFIG.host +':'+ CONFIG.port + '/password/reset?e='+user.id + '&p='+user.hash;
         
+        //@TODO determine best way to make an email template for use in password/lost
         var emailBodyHTML = '<html><body>';
         emailBodyHTML += "Hi, " + user.name + "<br><br>";
         emailBodyHTML += "You recently clicked the <b>forgot password?</b> link on the CivicSpaces site.<br>";

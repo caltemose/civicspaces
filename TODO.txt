@@ -1,17 +1,12 @@
 ========== fixes/additions ==========
 
-contact page stub
+photo upload - ajax
+  /api/upload/photo or /api/space/:id/photo
+photo display - /space/map, /space/view, /space/list
 
 check next(), next(err) situations and resolve issues
 
 client-side form validation
-
-photo upload - ajax
-  /api/upload/photo or /api/space/:id/photo
-
-google maps api setup
-geo lookup
-/space/map
 
 basic fixes to responsiveness
   tablet-sized main nav
@@ -20,16 +15,12 @@ need content:
   terms, privacy, contact
 
 
-========== file @TODOs ==========
-app.js
-  prod/dev env
-  heroku setup
-  config additions
 
+========== file @TODOs ==========
 routes/spaces
   handle various errors
   validate zip, address
-  remove add contact to find query
+  remove: add contact to find query
 
 views/space/edit
   checkbox + radio intelligence/condense

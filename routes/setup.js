@@ -8,7 +8,7 @@ module.exports = function (app) {
     res.send('@TODO implement /setup/spaces/remove')
   })
 
-  app.get('/setup/spaces/', function(req, res) {
+  app.get('/setup/spaces', function(req, res) {
     var spaces = [
       {
         address: '999 Peachtree Street',

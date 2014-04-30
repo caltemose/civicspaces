@@ -5,21 +5,18 @@ var logfmt = require("logfmt");
 
 module.exports = function (app, CONFIG) {
   app.use(express.logger('dev'));
-  app.use(logfmt.requestLogger()); //heroku log format
+  //app.use(logfmt.requestLogger()); //heroku log format
 
   //static files
   app.use(express.static( path.join(__dirname, '../public')));
-  //var test = 'mongodb://user:pass@ds031747.mongolab.com:31747/heroku_app24489443'
-  // handle sessions and store them in mongo
-  var secret = 'asCJ37c8-!jCcl-Fjl2*74c98#-dbJ3L1348^1@#8djkl';
-  var db = 'csproto';
-  var hour = 3600000;
+  
+  //sessions
   app.use(express.cookieParser());
-  //app.use(express.session({secret: secret}));
+  var hour = 3600000;
   var store;
 
   if (CONFIG.dbUri.indexOf('localhost') > -1)
-    store = {db:db}
+    store = {db:CONFIG.localDb}
   else {
     store = {}
     var halves = CONFIG.dbUri.split('@')
@@ -34,10 +31,10 @@ module.exports = function (app, CONFIG) {
   }
 
   app.use(express.session({
-    secret: secret, 
+    secret: CONFIG.secret, 
     store: new MongoStore(store),
     cookie: {
-      maxAge: hour
+      maxAge: 48*hour
     }
   }));
 

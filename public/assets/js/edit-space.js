@@ -100,6 +100,15 @@ cs.space.updateAddress = function(){
     }
   })
 }
+cs.space.activateUploader = function() {
+  // var form = $('#uploader');
+  // form.submit(function(e) {
+  //   e.preventDefault();
+  // });
+  // $('[type="file"]', form).change(function(){
+  //   //form.submit()
+  // });
+}
 google.maps.event.addDomListener(window, 'load', cs.space.lookupGeo);
 
 $(document).ready(function(){
@@ -107,4 +116,5 @@ $(document).ready(function(){
     e.preventDefault();
     cs.space.updateAddress();
   });
+  cs.space.activateUploader();
 });

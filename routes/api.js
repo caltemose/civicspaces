@@ -14,6 +14,7 @@ module.exports = function (app) {
     })
   })
 
+
   app.post('/api/add-geo', function (req, res) {
     var id = req.param('id');
     var lat = parseFloat(req.param('lat'));
@@ -32,7 +33,7 @@ module.exports = function (app) {
     })
   });
 
-  app.post('/api/update-geo-address', function(req, res) {
+  app.post('/api/update/location', function(req, res) {
     var id = req.param('id');
     var lat = req.param('lat');
     var lng = req.param('lng');

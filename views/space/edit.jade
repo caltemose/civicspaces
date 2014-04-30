@@ -30,7 +30,7 @@ block content
 
             label
               | *Address: 
-              input.form-control(name="address" type="text" maxlength="128" data-validate-rules="required" value="#{space.address}")
+              input.form-control(name="address" type="text" maxlength="128" value="#{space.address}" data-orig="#{space.address}")
               span
 
             label
@@ -39,7 +39,7 @@ block content
 
             label
               | *Zip Code: 
-              input.form-control(name="zip" type="text" maxlength="10" data-validate-rules="required|zip" value="#{space.zip}")
+              input.form-control(name="zip" type="text" maxlength="10" value="#{space.zip}" data-orig="#{space.zip}")
               span
 
             label
@@ -50,18 +50,35 @@ block content
               else
                 input.form-control(name="contact" type="text" value="#{session.user}") 
 
-            if space.geo.lat != undefined
-              input(type="hidden" value="#{space.geo.lat}" name="lat")
-              input(type="hidden" value="#{space.geo.lng}" name="lng")
-            else
+            //- if space.geo.lat != undefined
+            input(type="hidden" value=space.geo.lat name="lat")
+            input(type="hidden" value=space.geo.lng name="lng")
+            //- else
               input(type="hidden" value="" name="lat")
               input(type="hidden" value="" name="lng")
 
-            button.btn.btn-success#updatemap Update Map and Save Address
+            //- button.btn.btn-success#updatemap Update Map and Save Address
 
           div.col-md-6
             div#googlemap(style="min-height:250px")
 
+
+    div.section
+      h2 Photos
+
+      if images && images.length
+        ul
+          each image in images
+            li= image.url
+
+      div.row
+        div.col-sm-6
+          form#uploader(entype='multipart/form-data')
+            input(type="hidden" name="_id" value=space._id)
+            input.form-control(type='file' name='imageupload')
+
+
+    form
       div.section
 
         h2 Size and Type
@@ -252,12 +269,10 @@ block content
 
         textarea.form-control.not-too-wide(name="description" rows="10" cols="20")= space.description
 
-      //- div.section
 
-      //-   h2 Photos
-
-      input.btn.btn-success(type="submit" name="submit" value="Save Listing") 
+      input.btn.btn-success(type="submit" name="submit" value="Save Space Details") 
 
 block scripts
   script(src='https://maps.googleapis.com/maps/api/js?sensor=false')
-  script(src="/assets/js/edit-space.js")
+  script(src="/assets/js/cs.map.js")
+  script(src="/assets/js/space.edit.js")

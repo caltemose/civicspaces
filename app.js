@@ -4,16 +4,18 @@ var express = require('express');
 // add mongoose query and promise support to express
 require('express-mongoose');
 
-// @TODO prod/dev environment setup
-
-
 var CONFIG = {
-  // @TODO CONFIG.host needs to be an ENV variable
-  host: 'http://localhost',
+  host: process.env.HOST || 'http://localhost',
   port: Number(process.env.PORT || 3000),
-  dbUri: process.env.MONGOLAB_URI ||
-  process.env.MONGOHQ_URL || 'mongodb://localhost/csproto'
+  dbUri: process.env.MONGOLAB_URI || process.env.MONGOHQ_URL || 'mongodb://localhost/csproto',
+  localDb: process.env.LOCAL_DB || 'csproto',
+  secret: process.env.SECRET || 'asCJ37c8-jCclFjl2*74c98#dbJ3L1348^1@#8djkl',
+  mandrillKey: process.env.MANDRILL_KEY || null,
+  awsKey: process.env.AWS_KEY || null,
+  awsSecret: process.env.AWS_SECRET || null
 }
+
+// @TODO prod/dev environment setup
 mongoose.set('debug', true);
 
 var models = require('./models');
