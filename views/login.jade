@@ -11,12 +11,14 @@ block content
     h1 Log In
 
     div.row
-      div.col-md-5
+      div.col-md-6
         
         form.form-login(method="POST" action="/login" enctype='application/x-www-form-urlencoded')
 
           if invalid
-            div.alert.alert-danger Please enter a valid email address and password.
+            div.invalid.alert.alert-danger Please enter a valid email address and password.
+          else
+            div.invalid.alert.alert-danger(style="display:none") Please enter a valid email address and password.
 
           label
             | Email:
@@ -34,6 +36,15 @@ block content
 block scripts
   script(src="/assets/js/cs.js")
   script.
+    cs.page = cs.page || {};
+    cs.page.init = function() {
+      var form = $('.form-login');
+      var warning = $('.invalid', form);
+      cs.sharedMethods.initForm(form);
+      form.bind('validation_error', function(event) {
+        warning.show();
+      });
+    }
     $(document).ready(function(){
-      cs.sharedMethods.initForm('.form-login');
+      cs.page.init();
     });

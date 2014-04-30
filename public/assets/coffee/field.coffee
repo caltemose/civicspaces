@@ -10,19 +10,22 @@ class Field
     else if @container.find('select').length
       @field = @container.find('select')
       @updateEvent = 'change'
+
     @validation = @field.data('validation-rules') or false
-    
     @field.bind @updateEvent, @checkValue
 
+
   checkValue: (event) =>
-    valid = @isValid()
-    if valid
-      console.log 'this field is valid'
-    else
-      console.log 'this field is not valid'
+    @isValid()
+    
 
   isValid: ->
     if !@validation
-      return true
+      @valid = true
     else
-      valid = cs.validator.test @validation, @field
+      @valid = cs.validator.test @validation, @field
+    if @valid
+      @container.removeClass().addClass 'has-success'
+    else
+      @container.removeClass().addClass 'has-error'
+    @valid

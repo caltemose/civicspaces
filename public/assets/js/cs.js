@@ -100,7 +100,8 @@
 
     Form.prototype.submit = function(e) {
       if (!this.isValid()) {
-        return e.preventDefault();
+        e.preventDefault();
+        return this.container.trigger('validation_error');
       }
     };
 
@@ -128,22 +129,21 @@
     }
 
     Field.prototype.checkValue = function(event) {
-      var valid;
-      valid = this.isValid();
-      if (valid) {
-        return console.log('this field is valid');
-      } else {
-        return console.log('this field is not valid');
-      }
+      return this.isValid();
     };
 
     Field.prototype.isValid = function() {
-      var valid;
       if (!this.validation) {
-        return true;
+        this.valid = true;
       } else {
-        return valid = cs.validator.test(this.validation, this.field);
+        this.valid = cs.validator.test(this.validation, this.field);
       }
+      if (this.valid) {
+        this.container.removeClass().addClass('has-success');
+      } else {
+        this.container.removeClass().addClass('has-error');
+      }
+      return this.valid;
     };
 
     return Field;

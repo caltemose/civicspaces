@@ -23,6 +23,7 @@ class Form
   submit: (e) =>
     unless @isValid()
       e.preventDefault()
+      @container.trigger 'validation_error'
 
 
 
