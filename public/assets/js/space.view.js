@@ -15,10 +15,8 @@
           label: cs.page_space.address,
           infoHtml: cs.page_space.address
         };
-        if (cs.page_space.lat) {
+        if (cs.page_space.lat && cs.page_space.lng) {
           lat = cs.page_space.lat;
-        }
-        if (cs.page_space.lng) {
           lng = cs.page_space.lng;
         }
       }

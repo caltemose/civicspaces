@@ -11,9 +11,8 @@
       marker = 
         label: cs.page_space.address
         infoHtml: cs.page_space.address
-      if cs.page_space.lat
+      if cs.page_space.lat and cs.page_space.lng
         lat = cs.page_space.lat
-      if cs.page_space.lng
         lng = cs.page_space.lng
     
     cs.map.init '#googlemap', lat, lng, marker

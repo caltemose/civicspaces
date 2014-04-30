@@ -17,9 +17,4 @@ block content
 block scripts
   script(src='https://maps.googleapis.com/maps/api/js?sensor=false')
   script(src="/assets/js/cs.map.js")
-  script.
-    $(document).ready(function(){
-      // @TODO Determine where we should store the map default/origin options
-      cs.map.init('#googlemap', 33.7811643, -84.38362970000003);
-      cs.map.initMultiple('#mapresults');
-    })
+  script(src="/assets/js/space.map.js")

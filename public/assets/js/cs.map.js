@@ -26,9 +26,8 @@
         return cs.map.addMarker(lat, lng, marker.label, marker.infoHtml);
       }
     },
-    initMultiple: function(container) {
-      this.resultsContainer = $(container);
-      return google.maps.event.addListener(this.googlemap, 'bounds_changed', this.handleBoundsUpdate);
+    setBoundsUpdate: function(callback) {
+      return google.maps.event.addListener(this.googlemap, 'bounds_changed', callback);
     },
     drawMap: function(lat, lng, marker) {
       var m, _i, _len, _ref;
@@ -96,22 +95,38 @@
         title: label
       };
     },
+    initInfoWindow: function() {
+      if (!cs.map.infoWindow) {
+        return cs.map.infoWindow = new google.maps.InfoWindow({
+          content: 'default'
+        });
+      }
+    },
     addMarker: function(lat, lng, label, infoHtml) {
       var marker, options;
       if (label == null) {
         label = 'unlabeled marker';
       }
-      if (!cs.map.infoWindow) {
-        cs.map.infoWindow = new google.maps.InfoWindow({
-          content: 'default'
-        });
-      }
+      cs.map.initInfoWindow();
       options = this.makeMarkerOptions(lat, lng, label);
       marker = new google.maps.Marker(options);
       cs.map.markers.push(marker);
       return google.maps.event.addListener(marker, 'click', function() {
-        console.log('click');
         cs.map.infoWindow.setContent(infoHtml);
+        return cs.map.infoWindow.open(cs.map.googlemap, marker);
+      });
+    },
+    addSpaceMarker: function(space) {
+      var info, marker, options;
+      cs.map.initInfoWindow();
+      info = '<div class="mapInfoWindow">';
+      info += '<p><a href="/space/view/' + space._id + '">';
+      info += space.address + '</a><br>' + space.city + ', ' + space.zip + '</p>';
+      options = cs.map.makeMarkerOptions(space.geo.lat, space.geo.lng, space.address);
+      marker = new google.maps.Marker(options);
+      cs.map.markers.push(marker);
+      return google.maps.event.addListener(marker, 'click', function() {
+        cs.map.infoWindow.setContent(info);
         return cs.map.infoWindow.open(cs.map.googlemap, marker);
       });
     },
@@ -121,70 +136,6 @@
     },
     getBounds: function() {
       return this.googlemap.getBounds();
-    },
-    handleBoundsUpdate: function() {
-      var bounds;
-      bounds = this.getBounds();
-      return cs.map.requestSpaces(bounds.getNorthEast(), bounds.getSouthWest());
-    },
-    requestSpaces: function(ne, sw) {
-      var bounds;
-      console.log('requestSpaces');
-      bounds = {
-        ne_lat: ne.lat(),
-        ne_lng: ne.lng(),
-        sw_lat: sw.lat(),
-        sw_lng: sw.lng()
-      };
-      return this.request = $.getJSON('/api/properties/bounded', bounds, this.displaySpaces);
-    },
-    displaySpace: function(space) {
-      var info;
-      info = '<div class="mapInfoWindow">';
-      info += '<p><a href="/space/view/' + space._id + '">';
-      info += space.address + '</a><br>' + space.city + ', ' + space.zip + '</p>';
-      this.addMarker(space.geo.lat, space.geo.lng, space.address, info);
-      return this.displaySpaceHtml(space);
-    },
-    displaySpaces: function(data) {
-      var options, space, _i, _len, _ref, _results;
-      if (data.err) {
-        console.log(err);
-        return;
-      }
-      if (!cs.map.infoWindow) {
-        options = {
-          content: 'default'
-        };
-        cs.map.infoWindow = new google.maps.InfoWindow(options);
-      }
-      cs.map.resultsContainer.html('');
-      if (data.spaces && data.spaces.length > 0) {
-        _ref = data.spaces;
-        _results = [];
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          space = _ref[_i];
-          _results.push(cs.map.displaySpace(space));
-        }
-        return _results;
-      } else {
-        return console.log('no Spaces found in given boundaries');
-      }
-    },
-    displaySpaceHtml: function(space) {
-      var html;
-      html = '<div class="col-sm-6"><div class="well result clearfix">';
-      html += '<h4><a href="/space/view/' + space._id + '">';
-      html += space.address + '</a></h4>';
-      html += '<ul>';
-      if (space.type) {
-        html += '<li>' + space.type + '</li>';
-      }
-      if (space.leaseLength) {
-        html += '<li>' + space.leaseLength + '</li>';
-      }
-      html += '</ul></div></div>';
-      return this.resultsContainer.append(html);
     }
   };
 
