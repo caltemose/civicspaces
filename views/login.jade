@@ -13,19 +13,27 @@ block content
     div.row
       div.col-md-5
         
-        form(method="POST" action="/login" enctype='application/x-www-form-urlencoded')
+        form.form-login(method="POST" action="/login" enctype='application/x-www-form-urlencoded')
 
           if invalid
             div.alert.alert-danger Please enter a valid email address and password.
 
           label
             | Email:
-            input.form-control(type="text" name="email") 
+            input.form-control(type="text" name="email" data-validation-rules="email") 
 
           label
             | Password:
-            input.form-control(type="password" name="pass")
+            input.form-control(type="password" name="pass" data-validation-rules="password")
 
           input.btn.btn-primary.drop(type="submit" name="submit" value="Log In") 
 
         a(href="/password/lost") Forgot your password?
+
+
+block scripts
+  script(src="/assets/js/cs.js")
+  script.
+    $(document).ready(function(){
+      cs.sharedMethods.initForm('.form-login');
+    });

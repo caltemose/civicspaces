@@ -8,6 +8,7 @@
     init: function() {
       cs.page.getSelections();
       cs.page.initLocationFields();
+      cs.page.initOptionalForm();
       return cs.page.initMap();
     },
     getSelections: function() {
@@ -29,6 +30,11 @@
       return cs.page.selections.zip.blur(function(e) {
         return cs.page.saveLocation(this);
       });
+    },
+    initOptionalForm: function() {
+      var form, labels;
+      form = $('.form-options');
+      return labels = $('label', form);
     },
     initMap: function() {
       var address, marker;

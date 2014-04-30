@@ -14,9 +14,7 @@ block content
     p.note
       small *Required fields.
 
-    form(method="POST")
-
-      input(type="hidden" name="_id" value=space._id)
+    
 
       div.section
 
@@ -25,42 +23,41 @@ block content
 
         h2 Location and Contact Info
 
+        
+
         div.row
           div.col-md-6
+            form(method="POST").form-location
+              input(type="hidden" name="_id" value=space._id)
 
-            label
-              | *Address: 
-              input.form-control(name="address" type="text" maxlength="128" value="#{space.address}" data-orig="#{space.address}")
-              span
+              label
+                | *Address: 
+                input.form-control(name="address" type="text" maxlength="128" value="#{space.address}" data-orig="#{space.address}")
+                span
 
-            label
-              | City: 
-              input.form-control(name="city" type="text" maxlength="128" value="#{space.city}")
+              label
+                | City: 
+                input.form-control(name="city" type="text" maxlength="128" value="#{space.city}")
 
-            label
-              | *Zip Code: 
-              input.form-control(name="zip" type="text" maxlength="10" value="#{space.zip}" data-orig="#{space.zip}")
-              span
+              label
+                | *Zip Code: 
+                input.form-control(name="zip" type="text" maxlength="10" value="#{space.zip}" data-orig="#{space.zip}")
+                span
 
-            label
-              | *Contact Email: 
-              //- @TODO the else condition shouldn't be necessary
-              if space.contact
-                input.form-control(name="contact" type="text" value="#{space.contact}" disabled) 
-              else
-                input.form-control(name="contact" type="text" value="#{session.user}") 
+              label
+                | *Contact Email: 
+                //- @TODO the else condition shouldn't be necessary
+                if space.contact
+                  input.form-control(name="contact" type="text" value="#{space.contact}" disabled) 
+                else
+                  input.form-control(name="contact" type="text" value="#{session.user}") 
 
-            //- if space.geo.lat != undefined
-            input(type="hidden" value=space.geo.lat name="lat")
-            input(type="hidden" value=space.geo.lng name="lng")
-            //- else
-              input(type="hidden" value="" name="lat")
-              input(type="hidden" value="" name="lng")
+              input(type="hidden" value=space.geo.lat name="lat")
+              input(type="hidden" value=space.geo.lng name="lng")
+            
 
-            //- button.btn.btn-success#updatemap Update Map and Save Address
-
-          div.col-md-6
-            div#googlemap(style="min-height:250px")
+            div.col-md-6
+              div#googlemap(style="min-height:250px")
 
 
     div.section
@@ -73,12 +70,12 @@ block content
 
       div.row
         div.col-sm-6
-          form#uploader(entype='multipart/form-data')
+          form.form-uploader(entype='multipart/form-data')
             input(type="hidden" name="_id" value=space._id)
             input.form-control(type='file' name='imageupload')
 
 
-    form
+    form.form-options
       div.section
 
         h2 Size and Type

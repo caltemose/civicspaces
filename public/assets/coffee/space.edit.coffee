@@ -5,6 +5,7 @@
   init: ->
     cs.page.getSelections()
     cs.page.initLocationFields()
+    cs.page.initOptionalForm()
     cs.page.initMap()
   
   getSelections: ->
@@ -23,10 +24,11 @@
     cs.page.selections.zip.blur (e) ->
       cs.page.saveLocation @
 
-    # $('#updatemap').click (e) ->
-    #   e.preventDefault()
-    #   cs.page.updateLocation()
-
+  initOptionalForm: ->
+    form = $ '.form-options'
+    labels = $ 'label', form
+    # initField label for label in labels
+    
   initMap: ->
     # geo coords exist - draw map
     if cs.page.selections.lat.val().length && cs.page.selections.lng.val().length
