@@ -134,4 +134,13 @@ block content
 block scripts
   script(src='https://maps.googleapis.com/maps/api/js?sensor=false')
   script(src="/assets/js/cs.map.js")
-  script(src="/assets/js/view_space.js")
+  script.
+    cs.page_space = {
+      id: "#{space._id}",
+      address: "#{space.address}",
+      city: "#{space.city}",
+      zip: "#{space.zip}",
+      lat: "#{space.geo.lat}",
+      lng: "#{space.geo.lng}"
+    }
+  script(src="/assets/js/space.view.js")
