@@ -30,8 +30,6 @@ block content
           p
             | Contact: 
             strong #{space.contact}
-          //- p 
-          //-   small LatLng: #{space.geo.lat}, #{space.geo.lng}
 
 
           h3 Size and Type
@@ -133,14 +131,20 @@ block content
 
 block scripts
   script(src='https://maps.googleapis.com/maps/api/js?sensor=false')
-  script(src="/assets/js/cs.map.js")
+  script(src="/assets/js/cs.js")
   script.
-    cs.page_space = {
-      id: "#{space._id}",
-      address: "#{space.address}",
-      city: "#{space.city}",
-      zip: "#{space.zip}",
-      lat: "#{space.geo.lat}",
-      lng: "#{space.geo.lng}"
+    var cs = cs || {}
+    cs.page = {
+      init: function() {
+        var lat, lng, marker, map;
+        lat = "#{space.geo.lat}"; //33.7811643;
+        lng = "#{space.geo.lng}"; //-84.38362970000003;
+        marker = {
+          label: "#{space.address}",
+          infoHtml: "#{space.address}"
+        };
+        return cs.sharedMethods.initMap('#googlemap', lat, lng, marker);
+      }
     }
-  script(src="/assets/js/space.view.js")
+    google.maps.event.addDomListener(window, 'load', cs.page.init);
+

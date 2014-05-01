@@ -22,11 +22,11 @@ block content
 
           label
             | Email:
-            input.form-control(type="text" name="email" data-validation-rules="email") 
+            input.form-control(type="text" name="email" data-validation="email") 
 
           label
             | Password:
-            input.form-control(type="password" name="pass" data-validation-rules="password")
+            input.form-control(type="password" name="pass" data-validation="password")
 
           input.btn.btn-primary.drop(type="submit" name="submit" value="Log In") 
 
@@ -41,7 +41,8 @@ block scripts
       var form = $('.form-login');
       var warning = $('.invalid', form);
       cs.sharedMethods.initForm(form);
-      form.bind('validation_error', function(event) {
+      form.bind(cs.events.VALIDATION_ERROR, function(event) {
+        console.log('validation_error');
         warning.show();
       });
     }

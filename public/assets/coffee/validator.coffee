@@ -25,14 +25,19 @@ class Validator
     val = input.val()
     val.length >= 4
 
+  name: (input) ->
+    input.val().match @patterns.name
+
+  phone: (input) ->
+    input.val().match @patterns.phone
+
+
   # checked: (input) ->
   #   input.prop 'checked'
 
   # name: (input) ->
   #   input.val().replace(/[\s]+/," ").replace(/\s$/, "").match @patterns.name
 
-  # phone: (input) ->
-  #   input.val().match @patterns.phone
 
   # optional_phone: (input) ->
   #   input.prop("disabled") or input.val() is "" or @phone input
@@ -55,15 +60,18 @@ class Validator
       )
       $ ///i            #end of line and ignore case
 
+    name: ///^
+      [A-Za-z]([A-Za-z\-\s]{1,24})
+      $///
 
-    # phone: /// ^ #this allows various common formats
-    #   \D?
-    #   (\d{3})
-    #   \D?\D?
-    #   (\d{3})
-    #   \D?
-    #   (\d{4})
-    #   $ ///i 
+    phone: /// ^ #this allows various common formats
+      \D?
+      (\d{3})
+      \D?\D?
+      (\d{3})
+      \D?
+      (\d{4})
+      $ ///i 
 
     # zip_code: /// ^ # start regular expression
     #   ([0-9]{5,5})

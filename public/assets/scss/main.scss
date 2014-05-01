@@ -37,6 +37,10 @@ input.btn {
   font-size: 1.4em;
 }
 
+.has-error .form-control {
+  background: #FAE6E6;
+}
+
 .form-control[disabled] {
   color: #333;
 }

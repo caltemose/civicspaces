@@ -51,13 +51,14 @@ module.exports = function (app) {
   })
 
   app.post('/api/user/update', function(req, res) {
-    var id = req.param('id');
+    var email = req.param('email');
     var name = req.param('name');
     var phone = req.param('phone');
-    
-    if (!id || (!name && !phone))
+
+    if (!email || (!name && !phone))
       return res.json({err:"You must supply valid parameters for: email and (name or phone)"});
-    User.findByIdAndUpdate(id, {name:name, phone:phone}, null, function(err, user) {
+    
+    User.findByIdAndUpdate(email, {name:name, phone:phone}, null, function(err, user) {
       if (err) return res.json({err:err});
       if (!user) return res.json({err:"That user does not exist."});
       return res.json({success:true});

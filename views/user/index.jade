@@ -15,18 +15,21 @@ block content
         div.col-md-5
 
           h3 Contact Info
-          form#contactinfo
+          form.form-contact(data-ajax="true" data-ajax-url="/api/user/update")
             label 
               | Name: 
-              input.form-control(type="text" name="name" value="#{user.name}")
-            label
+              input.form-control(type="text" name="name" value="#{user.name}" data-validation="name")
+            label.disabled
               | Email: 
               input.form-control(type="text" name="email" value="#{user.id}" disabled)
             label
               | Phone: 
-              input.form-control(type="text" name="phone" value="#{user.phone}")
+              input.form-control(type="text" name="phone" value="#{user.phone}" data-validation="phone")
 
             input.btn.btn-success.drop(type="submit" name="submit" value="Update Account Info") 
+
+            div.form-results.alert(style="margin-top:1em")
+
 
         div.col-md-1
 
@@ -50,4 +53,27 @@ block content
                   //- @TODO Determine if space deactivation/activation is necessary
 
 block scripts
-  script(src='/assets/js/user_index.js')
+  script(src="/assets/js/cs.js")
+  script.
+    cs.page = cs.page || {};
+    cs.page.selections = {};
+    cs.page.init = function() {
+      var form = $('.form-contact');
+      var results = $('.form-results', form);
+      cs.sharedMethods.initForm(form);
+      form.bind(cs.events.VALIDATION_ERROR, function(event) {
+        console.log(cs.events.VALIDATION_ERROR);
+        results.removeClass('alert-success').addClass('alert-danger').html('You must enter a valid name and phone number before pressing the Update Account Info button.');
+      });
+      form.bind(cs.events.FORM_SUCCESS, function(event) {
+        console.log(cs.events.FORM_SUCCESS);
+        results.removeClass('alert-danger').addClass('alert-success').html('Your account information has been updated.')
+      });
+      form.bind(cs.events.FORM_FAILURE, function(event) {
+        console.log(cs.events.FORM_FAILURE);
+        results.hasClass('alert-success').removeClass('alert-success').addClass('alert-danger').html('Your information could not be updated. Try again later or contact an administrator for help.')
+      });
+    }
+    $(document).ready(function(){
+      cs.page.init();
+    });
