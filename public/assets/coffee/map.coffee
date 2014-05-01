@@ -24,11 +24,8 @@ class Map
     options = @makeMarkerOptions lat, lng, label
     marker = new google.maps.Marker options
     @markers.push marker
-    # setInfo = @infoWindow.setContent
-    # openInfo = @infoWindow.open
     iw = @infoWindow
     map = @googlemap
-    # console.log setInfo, infoHtml
     google.maps.event.addListener marker, 'click', ->
       iw.setContent infoHtml
       iw.open map, marker
