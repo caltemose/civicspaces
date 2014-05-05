@@ -1,7 +1,7 @@
 body {
   font-size: 16px;
   padding-top: 3.5em;
-  background: #eee; }
+  background: #eeeeee; }
 
 h1 {
   margin-bottom: 1em; }
@@ -21,7 +21,7 @@ dd {
 label {
   display: block;
   font-weight: normal;
-  color: #444; }
+  color: #444444; }
   label > select {
     display: block;
     width: 90%; }
@@ -33,16 +33,16 @@ input.btn {
   font-size: 1.4em; }
 
 .has-error .form-control {
-  background: #FAE6E6; }
+  background: #fae6e6; }
 
 .form-control[disabled] {
-  color: #333; }
+  color: #333333; }
 
 .main {
   min-height: 40em;
   margin-top: -0.3em;
   padding-bottom: 4em;
-  background: #fff; }
+  background: white; }
 
 .no-transition {
   -webkit-transition: height 0.1s;
@@ -57,7 +57,7 @@ input.btn {
   background: #ed6a1c;
   border-color: #ed6a1c; }
   .navbar-inverse .navbar-brand {
-    color: #fff; }
+    color: white; }
 
 .navbar-inverse .navbar-toggle {
   border: none;
@@ -69,7 +69,7 @@ input.btn {
   border: none; }
 
 .navbar-inverse .navbar-nav > li > a {
-  color: #eee; }
+  color: #eeeeee; }
 
 .navbar > .container .navbar-brand {
   width: 200px;
@@ -88,7 +88,6 @@ input.btn {
   font-size: 1.5em; }
 
 .promo {
-  /* div */
   margin: 0 1em 1em 0;
   padding: 1em;
   -webkit-border-radius: 0.5em;
@@ -104,8 +103,7 @@ input.btn {
   margin-top: 2em; }
 
 .note {
-  /* p */
-  color: #999; }
+  color: #999999; }
 
 .list-inline > li {
   padding-right: 0.5em;
@@ -128,10 +126,10 @@ input.btn {
   margin-bottom: 0.75em;
   font-size: 0.8em;
   font-style: italic;
-  color: #a00; }
+  color: #aa0000; }
 
 .terms.has-error .error {
-  background: #fee; }
+  background: #ffeeee; }
 
 .btn.drop {
   margin-top: 0.6em; }
