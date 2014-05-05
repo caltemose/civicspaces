@@ -7,7 +7,9 @@
   this.cs.page = {
     selections: {},
     init: function() {
-      return cs.page.selections.results = $('#mapresults');
+      cs.page.selections.results = $('#mapresults');
+      cs.sharedMethods.initMap('#googlemap');
+      return cs.sharedMethods.setBoundsUpdate(cs.page.handleBoundsUpdate);
     },
     handleBoundsUpdate: function() {
       var bounds, geo;
@@ -23,8 +25,7 @@
     displaySpaces: function(data) {
       var space, _i, _len, _ref, _results;
       if (data.err) {
-        console.log(err);
-        return;
+        return console.log(err);
       }
       if (data.spaces && data.spaces.length > 0) {
         cs.page.selections.results.html('');
@@ -40,12 +41,9 @@
       }
     },
     displaySpace: function(space) {
-      var html, _base;
-      cs.map.addSpaceMarker(space);
-      html = '<div class="col-sm-6"><div class="well result clearfix">';
-      html += '<h4><a href="/space/view/' + space._id + '">';
-      html += space.address + '</a></h4>';
-      html += '<ul>';
+      var html;
+      cs.map.addMarkerBySpace(space);
+      html = "<div class=\"col-sm-6\"><div class=\"well result clearfix\">\n<h4><a href=\"/space/view/" + space._id + "\">" + space.address + "</a></h4>\n<ul>";
       if (space.type) {
         html += '<li>' + space.type + '</li>';
       }
@@ -53,15 +51,12 @@
         html += '<li>' + space.leaseLength + '</li>';
       }
       html += '</ul></div></div>';
-      if ((_base = cs.page.selections).results == null) {
-        _base.results = $('#mapresults');
-      }
       return cs.page.selections.results.append(html);
     }
   };
 
   $(document).ready(function() {
-    return cs.page.init();
+    return google.maps.event.addDomListener(window, 'load', cs.page.init);
   });
 
 }).call(this);
