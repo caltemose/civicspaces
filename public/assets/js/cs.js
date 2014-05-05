@@ -12,6 +12,12 @@
       return new Form($(formId));
     },
     initMap: function(mapId, lat, lng, marker, zoom) {
+      if (lat == null) {
+        lat = Map.defaultLat;
+      }
+      if (lng == null) {
+        lng = Map.defaultLng;
+      }
       if (marker == null) {
         marker = null;
       }
@@ -19,6 +25,9 @@
         zoom = 12;
       }
       return cs.map = new Map($(mapId), lat, lng, marker, zoom);
+    },
+    setBoundsUpdate: function(callback) {
+      return google.maps.event.addListener(cs.map.googlemap, 'bounds_changed', callback);
     }
   };
 
@@ -83,10 +92,14 @@
   this.cs.validator = new Validator();
 
   Map = (function() {
+    Map.defaultLat = 33.7811643;
+
+    Map.defaultLng = -84.38362970000003;
+
     function Map(container, lat, lng, marker, zoom) {
       var options;
       this.container = $(container);
-      this.defaults();
+      this.markers = [];
       options = {
         center: this.makeLatLng(lat, lng),
         zoom: zoom
@@ -128,6 +141,12 @@
       });
     };
 
+    Map.prototype.addMarkerBySpace = function(space) {
+      var info;
+      info = "<p><a href=\"/space/view/" + space._id + "\">" + space.address + "</a><br>\n" + space.city + ", " + space.zip + "</p>";
+      return this.addMarker(space.geo.lat, space.geo.lng, space.address, info);
+    };
+
     Map.prototype.removeMarker = function(marker) {
       marker.setMap(null);
       return marker = null;
@@ -144,6 +163,10 @@
 
     Map.prototype.makeLatLng = function(lat, lng) {
       return new google.maps.LatLng(lat, lng);
+    };
+
+    Map.prototype.getBounds = function() {
+      return this.googlemap.getBounds();
     };
 
     return Map;

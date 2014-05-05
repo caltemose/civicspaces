@@ -4,10 +4,12 @@
 
   selections: {}
   
-  init: (map, results, lat, lng) ->
-    cs.page.selections.results = $ results
-    cs.map.init map, lat, lng 
-    cs.map.setBoundsUpdate cs.page.handleBoundsUpdate
+  init: ->
+    # '#googlemap', '#mapresults', cs.map.defaultLat, cs.map.defaultLng
+    cs.page.selections.results = $ '#mapresults'
+    
+    # cs.map.init map, lat, lng 
+    # cs.map.setBoundsUpdate cs.page.handleBoundsUpdate
 
   handleBoundsUpdate: ->
     bounds = cs.map.getBounds()
@@ -48,5 +50,5 @@
 
 
 $(document).ready ->
-  cs.page.init '#googlemap', '#mapresults', cs.map.defaultLat, cs.map.defaultLng
+  cs.page.init()
 

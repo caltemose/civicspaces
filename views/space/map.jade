@@ -16,5 +16,52 @@ block content
 
 block scripts
   script(src='https://maps.googleapis.com/maps/api/js?sensor=false')
-  script(src="/assets/js/cs.map.js")
-  script(src="/assets/js/space.map.js")
+  script(src="/assets/js/cs.js")
+  script.
+    var cs = cs || {}
+    cs.page = {
+      selections: {},
+      init: function() {
+        cs.page.selections.results = $('#mapresults');
+        cs.sharedMethods.initMap('#googlemap');
+        cs.sharedMethods.setBoundsUpdate(cs.page.handleBoundsUpdate);
+      },
+      handleBoundsUpdate: function() {
+        bounds = cs.map.getBounds()
+        var geo = {
+          ne_lat: bounds.getNorthEast().lat(),
+          ne_lng: bounds.getNorthEast().lng(),
+          sw_lat: bounds.getSouthWest().lat(),
+          sw_lng: bounds.getSouthWest().lng()
+        }
+        $.getJSON('/api/properties/bounded', geo, cs.page.displaySpaces);
+      },
+      displaySpaces: function(data) {
+        if (data.err)
+          return console.log(err);
+        
+        if (data.spaces && data.spaces.length > 0) {
+          var i, _len = data.spaces.length;  
+          cs.page.selections.results.html('');
+          for(i=0; i<_len; i++)
+            cs.page.displaySpace(data.spaces[i]);
+        } else 
+          console.log('no Spaces found in given boundaries');
+      },
+      displaySpace: function(space) {
+        cs.map.addMarkerBySpace(space);
+        html = '<div class="col-sm-6"><div class="well result clearfix">'
+        //- img.pull-right(src='' alt='')
+        html += '<h4><a href="/space/view/' + space._id + '">'
+        html += space.address + '</a></h4>'
+        html += '<ul>'
+        if (space.type)
+          html += '<li>' + space.type + '</li>'
+        if (space.leaseLength)
+          html += '<li>' + space.leaseLength + '</li>'
+        html += '</ul></div></div>'
+        cs.page.selections.results.append(html)
+      }
+    }
+    google.maps.event.addDomListener(window, 'load', cs.page.init);
+

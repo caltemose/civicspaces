@@ -6,10 +6,8 @@
 
   this.cs.page = {
     selections: {},
-    init: function(map, results, lat, lng) {
-      cs.page.selections.results = $(results);
-      cs.map.init(map, lat, lng);
-      return cs.map.setBoundsUpdate(cs.page.handleBoundsUpdate);
+    init: function() {
+      return cs.page.selections.results = $('#mapresults');
     },
     handleBoundsUpdate: function() {
       var bounds, geo;
@@ -63,7 +61,7 @@
   };
 
   $(document).ready(function() {
-    return cs.page.init('#googlemap', '#mapresults', cs.map.defaultLat, cs.map.defaultLng);
+    return cs.page.init();
   });
 
 }).call(this);

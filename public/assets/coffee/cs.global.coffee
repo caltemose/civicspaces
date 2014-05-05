@@ -5,8 +5,11 @@
   initForm: (formId) ->
     new Form $ formId
 
-  initMap: (mapId, lat, lng, marker = null, zoom = 12) ->
+  initMap: (mapId, lat = Map.defaultLat, lng = Map.defaultLng, marker = null, zoom = 12) ->
     cs.map = new Map $(mapId), lat, lng, marker, zoom
+
+  setBoundsUpdate: (callback) ->
+    google.maps.event.addListener cs.map.googlemap, 'bounds_changed', callback
 
 
 @cs.events = 

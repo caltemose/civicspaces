@@ -1,8 +1,11 @@
 class Map
 
+  @defaultLat = 33.7811643
+  @defaultLng = -84.38362970000003
+
   constructor: (container, lat, lng, marker, zoom) ->
     @container = $ container
-    @defaults()
+    @markers = []
     options =
       center: @makeLatLng lat, lng
       zoom: zoom
@@ -30,6 +33,13 @@ class Map
       iw.setContent infoHtml
       iw.open map, marker
 
+  addMarkerBySpace: (space) ->
+    info =  """
+            <p><a href="/space/view/#{space._id}">#{space.address}</a><br>
+            #{space.city}, #{space.zip}</p>
+            """
+    @addMarker space.geo.lat, space.geo.lng, space.address, info
+
   removeMarker: (marker) ->
     marker.setMap null
     marker = null
@@ -42,5 +52,8 @@ class Map
 
   makeLatLng: (lat, lng) ->
     new google.maps.LatLng(lat, lng)
+
+  getBounds: ->
+    @googlemap.getBounds()
 
 
