@@ -83,8 +83,13 @@ module.exports = function (app) {
         var data = {spaces:[]};
         if (spaces && spaces.length > 0) data = {spaces:spaces};
         return res.jsonp(data);
-      })
+      })         
+  })
 
-          
+  app.post('/api/space/update', loggedIn, function(req, res) {
+    Space.updateProperty(req, function(err) {
+      if (err) return res.jsonp({err:err});
+      res.jsonp({success:true});
+    })
   })
 };

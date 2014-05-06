@@ -33,12 +33,14 @@
   this.cs.events = {
     VALIDATION_ERROR: 'validation_error',
     FORM_SUCCESS: 'form_success',
-    FORM_FAILURE: 'form_failure'
+    FORM_FAILURE: 'form_failure',
+    SAVE_FIELD: 'save_field'
   };
 
   Field = (function() {
-    function Field(container) {
+    function Field(container, autoSave) {
       this.container = container;
+      this.autoSave = autoSave;
       this.checkValue = __bind(this.checkValue, this);
       if (!this.container.hasClass('disabled')) {
         if (this.container.find('input').length) {
@@ -51,6 +53,9 @@
         } else if (this.container.find('select').length) {
           this.field = this.container.find('select');
           this.updateEvent = 'change';
+        } else if (this.container.find('textarea').length) {
+          this.field = this.container.find('textarea');
+          this.updateEvent = 'blur';
         }
         this.validation = this.field.data('validation') || false;
         this.field.bind(this.updateEvent, this.checkValue);
@@ -63,10 +68,17 @@
         }
         this.validation = false;
       }
+      this.container.data('field', this);
     }
 
+    Field.prototype.saveField = function() {
+      return this.container.trigger(cs.events.SAVE_FIELD);
+    };
+
     Field.prototype.checkValue = function(event) {
-      return this.isValid();
+      if (this.isValid() && this.autoSave) {
+        return this.saveField();
+      }
     };
 
     Field.prototype.isValid = function() {
@@ -88,7 +100,11 @@
     };
 
     Field.prototype.getValue = function() {
-      return this.field.val();
+      if (this.field.attr('type') === 'checkbox') {
+        return this.field.is(':checked');
+      } else {
+        return this.field.val();
+      }
     };
 
     return Field;
@@ -97,17 +113,22 @@
 
   Form = (function() {
     function Form(container) {
-      var label, labels, _i, _len;
+      var id_field, label, labels, _i, _len;
       this.container = container;
       this.handleSubmissionResults = __bind(this.handleSubmissionResults, this);
       this.submitAjax = __bind(this.submitAjax, this);
       this.submit = __bind(this.submit, this);
+      this.saveField = __bind(this.saveField, this);
       this.fields = [];
-      labels = $('label', this.container);
-      for (_i = 0, _len = labels.length; _i < _len; _i++) {
-        label = labels[_i];
-        this.createField(label);
+      this.autoSave = this.ajax = false;
+      id_field = $('[name="_id"]', this.container);
+      if (id_field.length) {
+        this._id = id_field.val();
+      } else {
+        console.log('!! this form is missing an _id field');
+        console.log(this.container);
       }
+      labels = $('label', this.container);
       if (this.submitBtn == null) {
         this.submitBtn = $('[type="submit"]', this.container);
       }
@@ -117,18 +138,38 @@
         }
       }
       if (this.ajax) {
-        if (this.submitBtn) {
+        if (this.submitBtn.length) {
           this.submitBtn.click(this.submitAjax);
         } else {
-          console.log('config field auto-saving for Field instances');
+          this.autoSave = true;
         }
       } else {
         this.submitBtn.click(this.submit);
       }
+      for (_i = 0, _len = labels.length; _i < _len; _i++) {
+        label = labels[_i];
+        this.createField(label);
+      }
     }
 
     Form.prototype.createField = function(label) {
-      return this.fields.push(new Field($(label)));
+      var $label;
+      $label = $(label);
+      if ($label.children().length) {
+        this.fields.push(new Field($label, this.autoSave));
+        return $label.bind(cs.events.SAVE_FIELD, this.saveField);
+      }
+    };
+
+    Form.prototype.saveField = function(event) {
+      var data, field;
+      field = $(event.target).data('field');
+      data = {
+        _id: this._id,
+        property: field.getName(),
+        value: field.getValue()
+      };
+      return $.post(this.ajax, data, this.handleSubmissionResults, "json");
     };
 
     Form.prototype.isValid = function() {
@@ -177,7 +218,6 @@
 
     Form.prototype.handleSubmissionResults = function(results) {
       if (results.err) {
-        console.log(results.err);
         this.container.trigger(cs.events.FORM_FAILURE);
       }
       if (results.success) {

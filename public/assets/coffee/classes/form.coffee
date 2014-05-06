@@ -2,24 +2,48 @@ class Form
 
   constructor: (@container) ->
     @fields = []
+    @autoSave = @ajax = false
+    
+    id_field = $ '[name="_id"]', @container
+    if id_field.length
+      @_id = id_field.val()
+    else
+      console.log '!! this form is missing an _id field'
+      console.log @container
+
     labels = $ 'label', @container
-    @createField label for label in labels
     @submitBtn ?= $ '[type="submit"]', @container
     if @container.data 'ajax'
       if @container.data 'ajax-url'
         @ajax = @container.data 'ajax-url'
     if @ajax
-      if @submitBtn
+      if @submitBtn.length
         @submitBtn.click @submitAjax
       else
-        console.log 'config field auto-saving for Field instances'
+        @autoSave = true
     else
       @submitBtn.click @submit
+
+    @createField label for label in labels
         
 
   createField: (label) ->
-    # unless label.className is 'disabled'
-    @fields.push new Field $ label
+    $label = $ label
+    # @TODO Stop using <label> for styling purposes only and the check below won't be necessary
+    if $label.children().length
+      @fields.push new Field $label, @autoSave
+      $label.bind cs.events.SAVE_FIELD, @saveField
+        # field = $(this).data('field')
+        # console.log field.getName(), field.getValue()
+
+  saveField: (event) =>
+    field = $(event.target).data 'field'
+    data =
+      _id: @_id
+      property: field.getName()
+      value: field.getValue()
+
+    $.post @ajax, data, @handleSubmissionResults, "json"
 
   isValid: ->
     @valid = true
@@ -31,7 +55,6 @@ class Form
       @valid = false
 
   submit: (e) =>
-    # console.log 'submit:', @isValid()
     unless @isValid()
       e.preventDefault()
       @container.trigger 'validation_error'
@@ -53,7 +76,6 @@ class Form
 
   handleSubmissionResults: (results) =>
     if results.err
-      console.log results.err
       @container.trigger cs.events.FORM_FAILURE
     if results.success
       @container.trigger cs.events.FORM_SUCCESS

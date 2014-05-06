@@ -4,7 +4,7 @@ body {
   background: #eeeeee; }
 
 h1 {
-  margin-bottom: 1em; }
+  margin-bottom: 0.75em; }
   h1 > small {
     display: block; }
 
@@ -40,7 +40,7 @@ input.btn {
 
 .main {
   min-height: 40em;
-  margin-top: -0.3em;
+  margin-top: 0.5em;
   padding-bottom: 4em;
   background: white; }
 
@@ -155,3 +155,6 @@ input.btn {
 
 .spaceview {
   height: 300px; }
+
+#mapresults {
+  margin-top: 1em; }

@@ -36,6 +36,25 @@ var schema = mongoose.Schema({
   description: {type:String}
 })
 
+schema.statics.updateProperty = function(req, callback) {
+  var id = req.param('_id');
+  var query = {_id: id};
+  var property = req.param('property');
+  var value = req.param('value');
+  var update = {}
+  update[property] = value;
+
+  // console.log(query);
+  // console.log(update);
+
+  //update the model
+  this.update(query, update, function(err, affected) {
+    if (err) return callback(err);
+    if (0 === affected) return callback(new Error('No Space to modify.'));
+    callback();
+  })
+}
+
 schema.statics.edit = function(req, callback) {
   var id = req.param('id');
   var author = req.session.user;
@@ -43,11 +62,10 @@ schema.statics.edit = function(req, callback) {
   //var query = { _id: id, contact: author };
   var query = { _id: id };
   var update = {};
-  //req'd
-  update.address = cleanString(req.param('address'));
-  update.city = cleanString(req.param('city'));
-  update.zip = cleanString(req.param('zip'));
-  update.contact = author;
+  if (req.param('address')) update.address = cleanString(req.param('address'));
+  if (req.param('city')) update.city = cleanString(req.param('city'));
+  if (req.param('zip')) update.zip = cleanString(req.param('zip'));
+  if (req.param('contact')) update.contact = author;
   //optional
   if (req.param('type').length > 0) update.type = req.param('type');
   if (req.param('leaseLength').length > 0) update.leaseLength = req.param('leaseLength');

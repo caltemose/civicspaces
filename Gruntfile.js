@@ -10,7 +10,8 @@ module.exports = function(grunt) {
         },
         files: {
           'public/assets/js/cs.js': ['public/assets/coffee/cs.coffee', 'public/assets/coffee/classes/*.coffee'],
-          'public/assets/js/pages/space.map.js': 'public/assets/coffee/pages/space.map.coffee'
+          'public/assets/js/pages/space.map.js': 'public/assets/coffee/pages/space.map.coffee',
+          'public/assets/js/pages/space.edit.js': 'public/assets/coffee/pages/space.edit.coffee'
         }
       }
     },
@@ -35,7 +36,7 @@ module.exports = function(grunt) {
 
     watch: {
       scripts: {
-        files: ['public/assets/coffee/*.coffee'],
+        files: ['public/assets/coffee/*.coffee', 'public/assets/coffee/classes/*.coffee', 'public/assets/coffee/pages/*.coffee'],
         tasks: ['coffee'],
         options: {
             spawn: false,

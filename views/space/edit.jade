@@ -9,7 +9,8 @@ block content
 
     h1 Edit Space Details
 
-    p Edit your space details below. You can increase your space's popularity by including more details and uploading several good-quality photos.
+    p Edit your space details below. 
+    //- You can increase your space's popularity by including more details and uploading several good-quality photos.
 
     p.note
       small *Required fields.
@@ -73,14 +74,15 @@ block content
             input.form-control(type='file' name='imageupload')
 
 
-    form.form-options
+    form.form-options(data-ajax="true" data-ajax-url="/api/space/update")
+
+      input(type="hidden" name="_id" value=space._id)
+      
       div.section
 
         h2 Size and Type
 
         div.row
-
-          //- @TODO fix the ENUM/SELECT menu intelligence for type, leaseLength, etc
 
           div.col-sm-6
             label 
@@ -123,27 +125,27 @@ block content
         div.row
           div.col-sm-6
             label Allow on premises:
-  
+            //- @TODO refactor/shrink allowed uses and amenities checkbox template logic. ick.
             div.grouped
               label
                 if space.allowed.foodBev
-                  input(type="checkbox" name="allowedFood" checked="checked")
+                  input(type="checkbox" name="allowed.foodBev" checked="checked")
                 else
-                  input(type="checkbox" name="allowedFood")
+                  input(type="checkbox" name="allowed.foodBev")
                 |  Food &amp; beverage
 
               label
                 if space.allowed.alcohol
-                  input(type="checkbox" name="allowedAlcohol" checked="checked")
+                  input(type="checkbox" name="allowed.alcohol" checked="checked")
                 else
-                  input(type="checkbox" name="allowedAlcohol")
+                  input(type="checkbox" name="allowed.alcohol")
                 |  Alcohol 
 
               label
                 if space.allowed.music
-                  input(type="checkbox" name="allowedMusic" checked="checked")
+                  input(type="checkbox" name="allowed.music" checked="checked")
                 else
-                  input(type="checkbox" name="allowedMusic")
+                  input(type="checkbox" name="allowed.music")
                 |  Loud music/noise 
                 small (with owner approval)
 
@@ -153,24 +155,24 @@ block content
             div.grouped
               label
                 if space.allowed.modifications == 'None'
-                  input(type="radio" name="allowedMods" value="None" checked="checked") 
+                  input(type="radio" name="allowed.modifications" value="None" checked="checked") 
                 else
-                  input(type="radio" name="allowedMods" value="None") 
+                  input(type="radio" name="allowed.modifications" value="None") 
                 |  None
 
               label
                 if space.allowed.modifications == 'Non-intrusive'
-                  input(type="radio" name="allowedMods" value="Non-intrusive" checked="checked") 
+                  input(type="radio" name="allowed.modifications" value="Non-intrusive" checked="checked") 
                 else 
-                  input(type="radio" name="allowedMods" value="Non-intrusive") 
+                  input(type="radio" name="allowed.modifications" value="Non-intrusive") 
                 |  Non-intrusive only 
                 small (wall hangings, for example)
 
               label
                 if space.allowed.modifications == 'Intrusive'
-                  input(type="radio" name="allowedMods" value="Intrusive" checked="checked") 
+                  input(type="radio" name="allowed.modifications" value="Intrusive" checked="checked") 
                 else
-                  input(type="radio" name="allowedMods" value="Intrusive") 
+                  input(type="radio" name="allowed.modifications" value="Intrusive") 
                 |  Intrusive  
                 small (with owner's permission)
 
@@ -184,30 +186,30 @@ block content
             div.grouped 
               label
                 if space.amenities.wifi
-                  input(type="checkbox" name="wifi" checked="checked") 
+                  input(type="checkbox" name="amenities.wifi" checked="checked") 
                 else
-                  input(type="checkbox" name="wifi") 
+                  input(type="checkbox" name="amenities.wifi") 
                 |  Wireless internet
 
               label
                 if space.amenities.parkingOnSite
-                  input(type="checkbox" name="parking" checked="checked") 
+                  input(type="checkbox" name="amenities.parkingOnSite" checked="checked") 
                 else
-                  input(type="checkbox" name="parking") 
+                  input(type="checkbox" name="amenities.parkingOnSite") 
                 |  On-site parking
 
               label
                 if space.amenities.handicap
-                  input(type="checkbox" name="handicap" checked="checked") 
+                  input(type="checkbox" name="amenities.handicap" checked="checked") 
                 else
-                  input(type="checkbox" name="handicap") 
+                  input(type="checkbox" name="amenities.handicap") 
                 |  Handicap Access
 
               label
                 if space.amenities.furnished
-                  input(type="checkbox" name="furnished" checked="checked") 
+                  input(type="checkbox" name="amenities.furnished" checked="checked") 
                 else
-                  input(type="checkbox" name="furnished") 
+                  input(type="checkbox" name="amenities.furnished") 
                 |  This space is furnished
 
           div.col-sm-4
@@ -216,21 +218,21 @@ block content
             div.grouped
               label
                 if space.amenities.bathroom == 'None'
-                  input(type="radio" name="bathroom" value="None" checked="checked") 
+                  input(type="radio" name="amenities.bathroom" value="None" checked="checked") 
                 else
-                  input(type="radio" name="bathroom" value="None") 
+                  input(type="radio" name="amenities.bathroom" value="None") 
                 |  None
               label
                 if space.amenities.bathroom == 'Single'
-                  input(type="radio" name="bathroom" value="Single" checked="checked") 
+                  input(type="radio" name="amenities.bathroom" value="Single" checked="checked") 
                 else
-                  input(type="radio" name="bathroom" value="Single") 
+                  input(type="radio" name="amenities.bathroom" value="Single") 
                 |  Single bathroom
               label
                 if space.amenities.bathroom == 'Multiple'
-                  input(type="radio" name="bathroom" value="Multiple" checked="checked") 
+                  input(type="radio" name="amenities.bathroom" value="Multiple" checked="checked") 
                 else
-                  input(type="radio" name="bathroom" value="Multiple") 
+                  input(type="radio" name="amenities.bathroom" value="Multiple") 
                 |  Multiple bathrooms
 
           div.col-sm-4
@@ -239,35 +241,40 @@ block content
             div.grouped
               label
                 if space.amenities.kitchen == 'None'
-                  input(type="radio" name="kitchen" value="None" checked="checked") 
+                  input(type="radio" name="amenities.kitchen" value="None" checked="checked") 
                 else
-                  input(type="radio" name="kitchen" value="None") 
+                  input(type="radio" name="amenities.kitchen" value="None") 
                 |  None
               label
                 if space.amenities.kitchen == 'Partial'
+                  input(type="radio" name="amenities.kitchen" value="Partial" checked="checked")
                 else
-                  input(type="radio" name="kitchen" value="Partial") 
+                  input(type="radio" name="amenities.kitchen" value="Partial") 
                 |  Partial kitchen
               label
                 if space.amenities.kitchen == 'Full'
-                  input(type="radio" name="kitchen" value="Full" checked="checked") 
+                  input(type="radio" name="amenities.kitchen" value="Full" checked="checked") 
                 else
-                  input(type="radio" name="kitchen" value="Full") 
+                  input(type="radio" name="amenities.kitchen" value="Full") 
                 |  Full kitchen
 
 
-      div.section
+    div.section
+      form.form-description(data-ajax="true" data-ajax-url="/api/space/update")
 
+        input(type="hidden" name="_id" value=space._id)
+        
         h2 Description
         
         p.not-too-wide Enter your description below. You may wish to include details about allowed uses, amenities or other details.
 
-        textarea.form-control.not-too-wide(name="description" rows="10" cols="20")= space.description
+        //- @TODO adjust Form class to handle this textarea without being nested in an unused label. so lame.
+        label
+          textarea.form-control.not-too-wide(name="description" rows="10" cols="20")= space.description
 
-
-      input.btn.btn-success(type="submit" name="submit" value="Save Space Details") 
+      //- input.btn.btn-success(type="submit" name="submit" value="Save Space Details") 
 
 block scripts
   script(src='https://maps.googleapis.com/maps/api/js?sensor=false')
-  script(src="/assets/js/cs.map.js")
-  script(src="/assets/js/space.edit.js")
+  script(src="/assets/js/cs.js")
+  script(src="/assets/js/pages/space.edit.js")
