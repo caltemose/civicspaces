@@ -5,10 +5,8 @@
   init: ->
     cs.page.initOptionsForm()
     cs.page.initDescriptionForm()
-    # cs.page.getSelections()
-    # cs.page.initLocationFields()
-    # cs.page.initOptionalForm()
-    # cs.page.initMap()   
+    cs.page.initLocationForm()
+    cs.page.initMap()
 
   initOptionsForm: ->
     form = $ '.form-options'
@@ -18,161 +16,96 @@
     form = $ '.form-description'
     cs.sharedMethods.initForm form
 
+  initLocationForm: ->
+    cs.page.getSelections()
+    form = $ '.form-location'
+    cs.sharedMethods.initForm form
+    form.bind cs.events.FORM_FAILURE, cs.page.handleFormFailure
+    form.bind cs.events.FORM_SUCCESS, cs.page.handleFormSuccess
 
-   
-  # getSelections: ->
-  #   unless cs.page.selections
-  #     cs.page.selections = 
-  #       id: $ '[name="_id"]'
-  #       lat: $ '[name="lat"]'
-  #       lng: $ '[name="lng"]'
-  #       address: $ '[name="address"]'
-  #       city: $ '[name="city"]'
-  #       zip: $ '[name="zip"]'
+  initMap: ->
+    latEl = $ '[name="lat"]', '.form-location'
+    lngEl = $ '[name="lng"]', '.form-location'
+    addyEl = $ '[name="address"]', '.form-location'
+      
+    marker = 
+      label: addyEl.val()
+      infoHtml: addyEl.val()
 
-  # initLocationFields: ->
-  #   cs.page.selections.address.blur (e) ->
-  #     cs.page.saveLocation @
-  #   cs.page.selections.zip.blur (e) ->
-  #     cs.page.saveLocation @
+    lat = latEl.val()
+    lng = lngEl.val()
 
-  # initOptionalForm: ->
-  #   form = $ '.form-options'
-  #   labels = $ 'label', form
-  #   # initField label for label in labels
-    
-  # initMap: ->
-  #   # geo coords exist - draw map
-  #   if cs.page.selections.lat.val().length && cs.page.selections.lng.val().length
-  #     address = cs.page.selections.address.val()
-  #     marker = 
-  #       label: address
-  #       infoHtml: address
-  #     cs.map.init '#googlemap', cs.page.selections.lat.val(), cs.page.selections.lng.val(), marker
-  #   else 
-  #     cs.map.init '#googlemap', cs.map.defaultLat, cs.map.defaultLng
-  #     unless cs.page.selections.address.length <1 || cs.page.selections.zip.length<1
-  #       cs.map.getGeo cs.page.getCombinedAddress, cs.page.updateGeo
+    cs.sharedMethods.initMap('#googlemap', lat, lng, marker);
 
-  # getCombinedAddress: ->
-  #   cs.page.selections.address.val() + ',' + cs.page.selections.zip.val()
+  getSelections: ->
+    unless cs.page.selections
+      context = '.form-location'
+      cs.page.selections = 
+        id: $ '[name="_id"]', context
+        lat: $ '[name="lat"]', context
+        lng: $ '[name="lng"]', context
+        address: $ '[name="address"]', context
+        city: $ '[name="city"]', context
+        zip: $ '[name="zip"]', context
 
-  # saveLocation: (field) ->
-  #   $field = $ field
-  #   unless $field.val() is $field.attr('data-orig')
-  #     if $field.attr('name') is 'city'
-  #       console.log 'save city field value - no geo lookup'
-  #     else
-  #       cs.map.getGeo cs.page.getCombinedAddress(), cs.page.updateGeoAndLocation
-      # postData = 
-      #   id: cs.page.selections.id.val()
-      #   property: $field.attr('name')
-      #   value: $field.val()
-      # $.post '/api/location/update', postData, ((results) ->
-      #   if results.err
-      #     console.log results.err
-      #   if results.success
+  handleFormFailure: (event) ->
+    console.log 'form failure', event.target
 
+  handleFormSuccess: (event) ->
+    # console.log 'form success', event.target
+    cs.page.geocode()
 
-      # ), "json"
+  geocode: ->
+    geocoder = cs.page.geocoder || new google.maps.Geocoder()
+    callback = cs.page.handleGeocode
+    address = cs.page.getCombinedAddress()
+    geocoder.geocode {address:address}, (results, status) ->
+      if status is google.maps.GeocoderStatus.OK
+        loc = results[0].geometry.location
+        data = 
+          lat: loc.k
+          lng: loc.A
+          locality: cs.page.getLocalityFromComponents results[0].address_components
+        if results[0].partial_match
+          data.partial_match = true
+        callback null, data
+      else
+        callback status, null
 
-  # updateGeoAndLocation: (err, geo) ->
-  #   if err
-  #     console.log err
-  #     return
+  handleGeocode: (err, results) ->
+    if err
+      return console.log err
 
-  #   if geo.partial_match
-  #     console.log 'the google geocode request return sketchy results'
+    if results.partial_match
+      console.log 'the geocoding returned sketchy results'
+
+    else
+      postData = 
+        id: cs.page.selections.id.val()
+        lat: results.lat
+        lng: results.lng
+
+      $.post '/api/add-geo', postData, cs.page.handleGeoUpdate, "json"
+
+  handleGeoUpdate: (results) ->
+    if results.err 
+      return console.log results.err
+    if results.success
+      cs.page.selections.lat.val results.lat
+      cs.page.selections.lng.val results.lng
+      cs.sharedMethods.drawMap results.lat, results.lng, cs.page.selections.address.val()
+    return
+
+  getCombinedAddress: ->
+    cs.page.selections.address.val() + ',' + cs.page.selections.zip.val()
+
+  getLocalityFromComponents: (components) ->
+    locality = cs.page.getLocality component for component in components when component.types[0] is 'locality'
+    locality
+
+  getLocality: (component) ->
+    component.long_name
+
   
-  #   if geo.locality
-  #     city = geo.locality
-  #   else
-  #     city = cs.page.selections.city.val()
-
-  #   postData = 
-  #     id: cs.page.selections.id.val()
-  #     lat: geo.lat
-  #     lng: geo.lng
-  #     address: cs.page.selections.address.val()
-  #     city: city
-  #     zip: cs.page.selections.zip.val()
-
-  #   $.post '/api/update/location', postData, ((results) ->
-  #     if results.err
-  #       console.log results.err
-  #     else
-  #       console.log 'success: /api/update/location'
-  #       cs.page.selections.lat.val geo.lat
-  #       cs.page.selections.lng.val geo.lng
-  #       cs.page.selections.city.val(city).attr 'data-orig', city
-  #       marker = 
-  #         label: cs.page.selections.address.val()
-  #       marker.infoHtml = marker.label
-  #       cs.map.drawMap geo.lat, geo.lng, marker
-  #     return
-  #   ), "json"
-
-    
-  # updateGeo: (err, geo) ->
-  #   if err
-  #     console.log err
-  #     return
-
-  #   if geo.partial_match
-  #     console.log 'the google geocode request return sketchy results'
-    
-  #   else
-  #     postData = 
-  #       id: cs.page.selections.id.val()
-  #       lat: geo.lat
-  #       lng: geo.lng
-
-  #     $.post '/api/add-geo', postData, ((results) ->
-  #       if results.err 
-  #         console.log results.err
-  #       if results.success
-  #         console.log 'success adding lat/lng to space in database'
-  #         cs.page.selections.lat.val geo.lat
-  #         cs.page.selections.lng.val geo.lng
-  #         marker = 
-  #           label: cs.page.selections.address.val()
-  #         marker.infoHtml = marker.label
-  #         cs.map.drawMap geo.lat, geo.lng, marker
-  #       return
-  #     ), "json"
-
-  # updateLocation: ->
-  #   address = cs.page.selections.address.val()
-  #   zip = cs.page.selections.zip.val()
-  #   unless !address || !zip
-  #     cs.map.getGeo address + ',' + zip, cs.page.updateGeo
-
-    # cs.map.getGeo '#googlemap', cs.page.selections.address.val() + ',' + cs.page.selections.zip.val(), cs.page.updateGeo
-    # # var geocoder = new google.maps.Geocoder();
-    # geocoder.geocode(options, function(results, status) {
-    #   if (status === google.maps.GeocoderStatus.OK) {
-    #     var loc = results[0].geometry.location;
-    #     var postData = {
-    #       id: cs.space.selections.id.val(), 
-    #       lat: loc.k, lng: loc.A,
-    #       address: cs.space.selections.address.val(),
-    #       city: cs.space.selections.city.val(),
-    #       zip: cs.space.selections.zip.val()
-    #     };
-    #     $.post('/api/update-geo-address', postData, function(results) {
-    #       if (results.err) console.log(results.err);
-    #       if (results.success) {
-    #         console.log('success adding lat/lng to space in database');
-    #         cs.space.selections.lat.val(loc.k);
-    #         cs.space.selections.lng.val(loc.A);
-    #         cs.space.drawMap(cs.space.getLatLng(loc.k, loc.A));
-    #       }
-    #     }, "json");
-
-    #   } else {
-    #     console.log('There was a problem with the Google Maps Geocode Request:', status);
-    #   }
-
-
 $(document).ready ->
-  google.maps.event.addDomListener window, 'load', cs.page.init
+  google.maps.event.addDomListener(window, 'load', cs.page.init);

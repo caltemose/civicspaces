@@ -29,7 +29,7 @@ module.exports = function (app) {
     Space.findByIdAndUpdate(id, {geo: geo}, null, function(err, space) {
       if (err) return res.json({err:err});
       if (!space) return res.json({err:"Could not find a space with the provided id."});
-      return res.json({success:true});
+      return res.json({success:true, lat: lat, lng: lng});
     })
   });
 

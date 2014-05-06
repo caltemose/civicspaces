@@ -2,8 +2,11 @@ class Map
 
   @defaultLat = 33.7811643
   @defaultLng = -84.38362970000003
+  @defaultZoom = 13
 
   constructor: (container, lat, lng, marker, zoom) ->
+    if !zoom
+      zoom = Map.defaultZoom
     @container = $ container
     @markers = []
     options =
@@ -55,5 +58,12 @@ class Map
 
   getBounds: ->
     @googlemap.getBounds()
+
+  redraw: (lat, lng, label = '') ->
+    if @markers.length
+      @removeMarker m for m in @markers
+    @googlemap.setCenter @makeLatLng lat, lng
+    @googlemap.setZoom Map.defaultZoom
+    @addMarker lat, lng, label, label
 
 

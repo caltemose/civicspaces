@@ -26,7 +26,7 @@ block content
         
         div.row
           div.col-md-6
-            form(method="POST").form-location
+            form.form-location(method="POST" data-ajax="true" data-ajax-url="/api/space/update")
               input(type="hidden" name="_id" value=space._id)
 
               label
@@ -59,6 +59,8 @@ block content
             div#googlemap(style="min-height:250px")
 
 
+    hr
+
     div.section
       h2 Photos
 
@@ -72,6 +74,8 @@ block content
           form.form-uploader(entype='multipart/form-data')
             input(type="hidden" name="_id" value=space._id)
             input.form-control(type='file' name='imageupload')
+
+    hr
 
 
     form.form-options(data-ajax="true" data-ajax-url="/api/space/update")

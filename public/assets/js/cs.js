@@ -21,9 +21,14 @@
         marker = null;
       }
       if (zoom == null) {
-        zoom = 12;
+        zoom = null;
       }
       return cs.map = new Map($(mapId), lat, lng, marker, zoom);
+    },
+    drawMap: function(lat, lng, marker) {
+      if (!!cs.map) {
+        return cs.map.redraw(lat, lng, marker);
+      }
     },
     setBoundsUpdate: function(callback) {
       return google.maps.event.addListener(cs.map.googlemap, 'bounds_changed', callback);
@@ -127,6 +132,7 @@
       } else {
         console.log('!! this form is missing an _id field');
         console.log(this.container);
+        return;
       }
       labels = $('label', this.container);
       if (this.submitBtn == null) {
@@ -234,8 +240,13 @@
 
     Map.defaultLng = -84.38362970000003;
 
+    Map.defaultZoom = 13;
+
     function Map(container, lat, lng, marker, zoom) {
       var options;
+      if (!zoom) {
+        zoom = Map.defaultZoom;
+      }
       this.container = $(container);
       this.markers = [];
       options = {
@@ -305,6 +316,23 @@
 
     Map.prototype.getBounds = function() {
       return this.googlemap.getBounds();
+    };
+
+    Map.prototype.redraw = function(lat, lng, label) {
+      var m, _i, _len, _ref;
+      if (label == null) {
+        label = '';
+      }
+      if (this.markers.length) {
+        _ref = this.markers;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          m = _ref[_i];
+          this.removeMarker(m);
+        }
+      }
+      this.googlemap.setCenter(this.makeLatLng(lat, lng));
+      this.googlemap.setZoom(Map.defaultZoom);
+      return this.addMarker(lat, lng, label, label);
     };
 
     return Map;

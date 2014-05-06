@@ -10,6 +10,7 @@ class Form
     else
       console.log '!! this form is missing an _id field'
       console.log @container
+      return
 
     labels = $ 'label', @container
     @submitBtn ?= $ '[type="submit"]', @container

@@ -8,6 +8,9 @@ h1 {
   h1 > small {
     display: block; }
 
+hr {
+  border-top: 1px solid #cccccc; }
+
 li {
   margin-bottom: 0.6em; }
 
