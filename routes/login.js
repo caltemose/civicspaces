@@ -8,7 +8,12 @@ var crypto = require('crypto');
 module.exports = function (app) {
 
   app.get('/signup', function (req, res) {
-    res.render('signup.jade');
+    var data = {};
+    if (req.session.followup) {
+      data.followup = req.session.followup;
+      req.session.followup = null;
+    }
+    res.render('signup.jade', data);
   });
 
   // create new account
@@ -17,6 +22,7 @@ module.exports = function (app) {
     var pass = cleanString(req.param('pass'));
     var name = cleanString(req.param('name'));
     var phone = cleanString(req.param('phone'));
+    var followup = req.param('followup');
 
     if (!(email && pass && name && phone)) {
       return invalid();
@@ -50,7 +56,9 @@ module.exports = function (app) {
           req.session.isLoggedIn = true;
           req.session.user = email;
           console.log('created user: %s', email);
-          return res.redirect('/');
+          var redirectUrl = '/';
+          if (followup) redirectUrl = followup;
+          return res.redirect(redirectUrl);
         })
       })
     })
@@ -62,13 +70,17 @@ module.exports = function (app) {
 
   
   app.get('/login', function (req, res) {
-    res.render('login.jade');
+    var followup = req.param('followup');
+    var data = {};
+    if (followup) data.followup = followup;
+    res.render('login.jade', data);
   })
 
   app.post('/login', function (req, res, next) {
     // validate input
     var email = cleanString(req.param('email'));
     var pass = cleanString(req.param('pass'));
+    var followup = req.param('followup');
     if (!(email && pass)) {
       return invalid();
     }
@@ -91,7 +103,9 @@ module.exports = function (app) {
 
       req.session.isLoggedIn = true;
       req.session.user = email;
-      res.redirect('/');
+      var redirectUrl = '/';
+      if (followup) redirectUrl = followup;
+      res.redirect(redirectUrl);
     })
 
     function invalid () {

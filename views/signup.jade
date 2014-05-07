@@ -19,8 +19,18 @@ block content
 
           form.form-signup(method="POST" action="/signup" enctype='application/x-www-form-urlencoded')
             
+            if followup
+              input(type="hidden" name="followup" value=followup)
+
             p Create a CivicSpaces account using this form. You must have an account in order to list your own space on this site.
             
+            p
+              if followup
+                a(href="/login?followup=#{followup}") Log in
+              else
+                a(href="/login") Log in
+              |  if you already have an account.
+
             p
               strong All fields are required.
 
@@ -50,10 +60,6 @@ block content
               input.form-control(type="password" name="pass" data-validation="password")
 
             input.btn.btn-primary.drop(type="submit" name="submit" value="Create Account") 
-
-          p
-            a(href="/login") Log in
-            |  if you already have an account.
 
 
 block scripts

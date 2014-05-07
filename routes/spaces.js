@@ -17,7 +17,10 @@ module.exports = function (app) {
   app.get('/space/create', function (req, res) {
     if (req.session.isLoggedIn) {
       res.render('space/create.jade');  
-    } else res.redirect('/signup');
+    } else {
+      req.session.followup = '/space/create';
+      res.redirect('/signup');
+    }
   });
 
   app.post('/space/create', loggedIn, function(req, res) {
