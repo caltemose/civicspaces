@@ -36,7 +36,7 @@ module.exports = function (app, CONFIG) {
   user(app);
 
   // space CRUD
-  spaces(app);
+  spaces(app, CONFIG);
 
   // API routes
   api(app);

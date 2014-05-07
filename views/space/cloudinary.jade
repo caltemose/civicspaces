@@ -1,0 +1,31 @@
+extends ../layout
+
+block title
+  title #{sitetitle} | Cloudinary Test
+
+block content
+  div.container
+    h1 Cloudinary
+
+    form(enctype="multipart/form-data")!=cloudinary.uploader.image_upload_tag('image')
+
+
+block scripts
+  script(src="/assets/vendor/jquery.ui.widget.js")
+  script(src="/assets/vendor/jquery.iframe-transport.js")
+  script(src="/assets/vendor/jquery.fileupload.js")
+  script(src="/assets/vendor/jquery.cloudinary.js")
+  script.
+    $.cloudinary.config({ 
+      cloud_name: '!{cloud}',
+      api_key: '!{key}'
+    });
+    var field = $('.cloudinary-fileupload');
+    field.bind('fileuploadstart', function(e) {
+      console.log('file upload started...');
+    });
+    field.bind('cloudinarydone', function(e, data) {
+      console.log('cloudinarydone', e, data);
+      return true;
+    });
+

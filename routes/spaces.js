@@ -2,8 +2,18 @@ var loggedIn = require('../middleware/loggedIn');
 var mongoose = require('mongoose');
 var User = mongoose.model('User');
 var Space = mongoose.model('Space');
+var cloudinary = require('cloudinary');
 
-module.exports = function (app) {
+module.exports = function (app, CONFIG) {
+
+  app.get('/space/cloudinary', function(req, res) {
+    cloudinary.config({
+      cloud_name: CONFIG.cloudinaryCloud,
+      api_key: CONFIG.cloudinaryKey,
+      api_secret: CONFIG.cloudinarySecret
+    })
+    res.render('space/cloudinary.jade', {cloudinary:cloudinary, cloud: CONFIG.cloudinaryCloud, key: CONFIG.cloudinaryKey});
+  })
 
   app.get('/space/view/:id', function(req, res) {
     Space.findById(req.param('id'), function(err, space) {

@@ -12,7 +12,10 @@ var CONFIG = {
   secret: process.env.SECRET || 'asCJ37c8-jCclFjl2*74c98#dbJ3L1348^1@#8djkl',
   mandrillKey: process.env.MANDRILL_KEY || null,
   awsKey: process.env.AWS_KEY || null,
-  awsSecret: process.env.AWS_SECRET || null
+  awsSecret: process.env.AWS_SECRET || null,
+  cloudinaryCloud: process.env.CLOUDINARY_CLOUD || null,
+  cloudinaryKey: process.env.CLOUDINARY_KEY || null,
+  cloudinarySecret: process.env.CLOUDINARY_SECRET || null
 }
 
 // @TODO prod/dev environment setup
