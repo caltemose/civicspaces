@@ -21,7 +21,7 @@ block content
               input.form-control(type="text" name="name" value="#{user.name}" data-validation="name")
             label.disabled
               | Email: 
-              input.form-control(type="text" name="email" value="#{user.id}" disabled)
+              input.form-control(type="text" name="_id" value="#{user.id}" disabled)
             label
               | Phone: 
               input.form-control(type="text" name="phone" value="#{user.phone}" data-validation="phone")
@@ -71,7 +71,7 @@ block scripts
       });
       form.bind(cs.events.FORM_FAILURE, function(event) {
         console.log(cs.events.FORM_FAILURE);
-        results.hasClass('alert-success').removeClass('alert-success').addClass('alert-danger').html('Your information could not be updated. Try again later or contact an administrator for help.')
+        results.removeClass('alert-success').removeClass('alert-success').addClass('alert-danger').html('Your information could not be updated. Try again later or contact an administrator for help.')
       });
     }
     $(document).ready(function(){

@@ -129,10 +129,6 @@
       id_field = $('[name="_id"]', this.container);
       if (id_field.length) {
         this._id = id_field.val();
-      } else {
-        console.log('!! this form is missing an _id field');
-        console.log(this.container);
-        return;
       }
       labels = $('label', this.container);
       if (this.submitBtn == null) {
@@ -163,7 +159,9 @@
       $label = $(label);
       if ($label.children().length) {
         this.fields.push(new Field($label, this.autoSave));
-        return $label.bind(cs.events.SAVE_FIELD, this.saveField);
+        if (this.autoSave) {
+          return $label.bind(cs.events.SAVE_FIELD, this.saveField);
+        }
       }
     };
 
@@ -212,6 +210,7 @@
           field = _ref[_i];
           this.summarizeField(field);
         }
+        console.log(this.data);
         return $.post(this.ajax, this.data, this.handleSubmissionResults, "json");
       } else {
         return this.container.trigger(cs.events.VALIDATION_ERROR);
@@ -224,6 +223,7 @@
 
     Form.prototype.handleSubmissionResults = function(results) {
       if (results.err) {
+        console.log(results.err);
         this.container.trigger(cs.events.FORM_FAILURE);
       }
       if (results.success) {
@@ -355,6 +355,8 @@
       }
     };
 
+    Validator.prototype.min_password_length = 4;
+
     Validator.prototype.null_selection = "-1";
 
     Validator.prototype.not_empty = function(input) {
@@ -370,7 +372,7 @@
     Validator.prototype.password = function(input) {
       var val;
       val = input.val();
-      return val.length >= 4;
+      return val.length >= this.min_password_length;
     };
 
     Validator.prototype.name = function(input) {

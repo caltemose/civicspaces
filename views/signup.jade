@@ -13,11 +13,11 @@ block content
       div.col-md-5
         
         if session.isLoggedIn
-          p You cannot sign up for a new account while logged into an existing account.
+          p.alert.alert-danger You cannot sign up for a new account while logged into an existing account.
 
         else
 
-          form(method="POST" action="/signup" enctype='application/x-www-form-urlencoded')
+          form.form-signup(method="POST" action="/signup" enctype='application/x-www-form-urlencoded')
             
             p Create a CivicSpaces account using this form. You must have an account in order to list your own space on this site.
             
@@ -25,32 +25,50 @@ block content
               strong All fields are required.
 
             if exists
-              .error
+              div.invalid.alert.alert-danger
                 | That user exists. Are you trying to 
                 a(href="/login") Log in
                 | ?
 
             if invalid
-              .error Please enter a valid email address and password.
+              div.invalid.alert.alert-danger Please fill out all fields before creating your account.
 
             label
               | Email:
-              input.form-control(type="text" name="email") 
+              input.form-control(type="text" name="email" data-validation="email") 
 
             label
               | Name:
-              input.form-control(type="text" name="name") 
+              input.form-control(type="text" name="name" data-validation="name") 
 
             label
               | Phone number:
-              input.form-control(type="text" name="phone") 
+              input.form-control(type="text" name="phone" data-validation="phone") 
 
             label
               | Password:
-              input.form-control(type="password" name="pass")
+              input.form-control(type="password" name="pass" data-validation="password")
 
             input.btn.btn-primary.drop(type="submit" name="submit" value="Create Account") 
 
           p
             a(href="/login") Log in
             |  if you already have an account.
+
+
+block scripts
+  script(src="/assets/js/cs.js")
+  script.
+    cs.page = cs.page || {};
+    cs.page.init = function() {
+      var form = $('.form-signup');
+      var warning = $('.invalid', form);
+      cs.sharedMethods.initForm(form);
+      form.bind(cs.events.VALIDATION_ERROR, function(event) {
+        console.log('validation_error');
+        warning.show();
+      });
+    }
+    $(document).ready(function(){
+      cs.page.init();
+    });

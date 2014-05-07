@@ -5,7 +5,7 @@ var logfmt = require("logfmt");
 
 module.exports = function (app, CONFIG) {
   app.use(express.logger('dev'));
-  app.use(logfmt.requestLogger()); //heroku log format
+  // app.use(logfmt.requestLogger()); //heroku log format
 
   //static files
   app.use(express.static( path.join(__dirname, '../public')));

@@ -9,8 +9,11 @@ class Validator
       return @[method] input
     else
       return @not_empty input
+  
+  min_password_length: 4
 
   null_selection: "-1"
+
 
   #================================================ methods:
 
@@ -23,7 +26,7 @@ class Validator
 
   password: (input) ->
     val = input.val()
-    val.length >= 4
+    val.length >= @min_password_length
 
   name: (input) ->
     input.val().match @patterns.name

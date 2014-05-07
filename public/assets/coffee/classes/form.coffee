@@ -7,10 +7,10 @@ class Form
     id_field = $ '[name="_id"]', @container
     if id_field.length
       @_id = id_field.val()
-    else
-      console.log '!! this form is missing an _id field'
-      console.log @container
-      return
+    # else
+    #   console.log '!! this form is missing an _id field'
+    #   console.log @container
+    #   return
 
     labels = $ 'label', @container
     @submitBtn ?= $ '[type="submit"]', @container
@@ -33,9 +33,8 @@ class Form
     # @TODO Stop using <label> for styling purposes only and the check below won't be necessary
     if $label.children().length
       @fields.push new Field $label, @autoSave
-      $label.bind cs.events.SAVE_FIELD, @saveField
-        # field = $(this).data('field')
-        # console.log field.getName(), field.getValue()
+      if @autoSave
+        $label.bind cs.events.SAVE_FIELD, @saveField
 
   saveField: (event) =>
     field = $(event.target).data 'field'
@@ -67,6 +66,7 @@ class Form
     if @isValid()
       @data = {}
       @summarizeField field for field in @fields
+      console.log @data
       $.post @ajax, @data, @handleSubmissionResults, "json"
 
     else
@@ -77,6 +77,7 @@ class Form
 
   handleSubmissionResults: (results) =>
     if results.err
+      console.log results.err
       @container.trigger cs.events.FORM_FAILURE
     if results.success
       @container.trigger cs.events.FORM_SUCCESS
