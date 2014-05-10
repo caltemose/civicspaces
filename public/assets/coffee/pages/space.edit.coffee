@@ -143,6 +143,7 @@
     console.log 'progress: ' + Math.round((data.loaded * 100.0) / data.total) + '%'
   
   handleImageUploadDone: (e, data) ->
+    # @TODO display new image AFTER it's been added to db
     options =
       format: data.result.format
       version: data.result.version
@@ -150,6 +151,7 @@
       width: 150
       height: 150
     $('.edit-photos').append cs.page.makeImageLi data.result.public_id, options
+
     postData = 
       cloudinary_id: data.result.public_id
       space_id: cs.page.getSpaceId()
@@ -184,9 +186,7 @@
     html += '<button class="btn btn-danger btn-xs delete-photo" data-image-id="' + id + '">Delete</button>'
     html += '</li>'
     html
-    # li
-    #   img(src="/assets/img/space-default.png" class="cloudinary_image" data-src="#{image.cloudinary_id}" data-width="150" data-height="150" data-crop="thumb") 
-    #   button(class="btn btn-danger btn-xs" data-image-id="#{image.cloudinary_id}") Delete
+    
 
   
 $(document).ready ->
