@@ -7,6 +7,8 @@
     cs.page.initDescriptionForm()
     cs.page.initLocationForm()
     cs.page.initMap()
+    cs.page.initImageUpload()
+    $('.cloudinary_image').cloudinary()
 
   initOptionsForm: ->
     form = $ '.form-options'
@@ -22,6 +24,22 @@
     cs.sharedMethods.initForm form
     form.bind cs.events.FORM_FAILURE, cs.page.handleFormFailure
     form.bind cs.events.FORM_SUCCESS, cs.page.handleFormSuccess
+
+  initImageUpload: ->
+    unless cs.cloudinary.config
+      console.log 'cs.cloudinaryConfig is missing'
+      return
+    
+    $.cloudinary.config cs.cloudinary.config
+    field = $ '.cloudinary-fileupload'
+    if !field
+      console.log 'cloudinary upload field missing'
+      return
+    
+    field.bind 'fileuploadstart', @handleImageUploadStart
+    field.bind 'fileuploadfail', @handleImageUploadFail
+    field.bind 'fileuploadprogress', @handleImageUploadProgress
+    field.bind 'cloudinarydone', @handleImageUploadDone
 
   initMap: ->
     latEl = $ '[name="lat"]', '.form-location'
@@ -106,6 +124,49 @@
   getLocality: (component) ->
     component.long_name
 
+  handleImageUploadStart: (e) ->
+    console.log 'cloudinary upload started'
+
+  handleImageUploadFail: (e, data) ->
+    console.log 'file upload failed: ', data
+  
+  handleImageUploadProgress: (e, data) ->
+    console.log 'progress: ' + Math.round((data.loaded * 100.0) / data.total) + '%'
+  
+  handleImageUploadDone: (e, data) ->
+    # console.log 'cloudinarydone', data
+    space_id = $('[name="_id"]', '.form-upload').val()
+    options =
+      format: data.result.format
+      version: data.result.version
+      crop: 'fill'
+      width: 150
+      height: 150
+    $('.edit-photos').append cs.page.makeImageLi data.result.public_id, options
+    postData = 
+      cloudinary_id: data.result.public_id
+      space_id: space_id
+    $.post '/api/space/add-image', postData, cs.page.handleImageAdded, "json"
+    return true;
+
+  handleImageAdded: (results) ->
+    if results.err
+      console.log results.err
+      return
+
+    # console.log 'handleImageAdded', results
+
+  makeImageLi: (id, options) ->
+    html  = '<li>'
+    html += '<img src="' + $.cloudinary.url(id, options) + '" alt="photo thumbnail" >'
+    html += '<button class="btn btn-danger btn-xs" data-image-id="' + id + '">Delete</button>'
+    html += '</li>'
+    html
+    # li
+    #   img(src="/assets/img/space-default.png" class="cloudinary_image" data-src="#{image.cloudinary_id}" data-width="150" data-height="150" data-crop="thumb") 
+    #   button(class="btn btn-danger btn-xs" data-image-id="#{image.cloudinary_id}") Delete
+
   
 $(document).ready ->
-  google.maps.event.addDomListener(window, 'load', cs.page.init);
+  google.maps.event.addDomListener window, 'load', cs.page.init
+  

@@ -161,3 +161,20 @@ input.btn {
 
 #mapresults {
   margin-top: 1em; }
+
+.edit-photos {
+  list-style-type: none;
+  margin: 1em 0;
+  padding: 0; }
+  .edit-photos li {
+    display: inline-block;
+    width: 150px;
+    margin: 0 1em 0 0;
+    padding: 0;
+    text-align: center; }
+    .edit-photos li button {
+      width: 100%; }
+
+.form-upload {
+  margin: 0.5em 0 3em;
+  padding-top: 0.5em; }

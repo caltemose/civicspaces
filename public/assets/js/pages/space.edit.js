@@ -8,7 +8,9 @@
       cs.page.initOptionsForm();
       cs.page.initDescriptionForm();
       cs.page.initLocationForm();
-      return cs.page.initMap();
+      cs.page.initMap();
+      cs.page.initImageUpload();
+      return $('.cloudinary_image').cloudinary();
     },
     initOptionsForm: function() {
       var form;
@@ -27,6 +29,23 @@
       cs.sharedMethods.initForm(form);
       form.bind(cs.events.FORM_FAILURE, cs.page.handleFormFailure);
       return form.bind(cs.events.FORM_SUCCESS, cs.page.handleFormSuccess);
+    },
+    initImageUpload: function() {
+      var field;
+      if (!cs.cloudinary.config) {
+        console.log('cs.cloudinaryConfig is missing');
+        return;
+      }
+      $.cloudinary.config(cs.cloudinary.config);
+      field = $('.cloudinary-fileupload');
+      if (!field) {
+        console.log('cloudinary upload field missing');
+        return;
+      }
+      field.bind('fileuploadstart', this.handleImageUploadStart);
+      field.bind('fileuploadfail', this.handleImageUploadFail);
+      field.bind('fileuploadprogress', this.handleImageUploadProgress);
+      return field.bind('cloudinarydone', this.handleImageUploadDone);
     },
     initMap: function() {
       var addyEl, lat, latEl, lng, lngEl, marker;
@@ -127,6 +146,46 @@
     },
     getLocality: function(component) {
       return component.long_name;
+    },
+    handleImageUploadStart: function(e) {
+      return console.log('cloudinary upload started');
+    },
+    handleImageUploadFail: function(e, data) {
+      return console.log('file upload failed: ', data);
+    },
+    handleImageUploadProgress: function(e, data) {
+      return console.log('progress: ' + Math.round((data.loaded * 100.0) / data.total) + '%');
+    },
+    handleImageUploadDone: function(e, data) {
+      var options, postData, space_id;
+      space_id = $('[name="_id"]', '.form-upload').val();
+      options = {
+        format: data.result.format,
+        version: data.result.version,
+        crop: 'fill',
+        width: 150,
+        height: 150
+      };
+      $('.edit-photos').append(cs.page.makeImageLi(data.result.public_id, options));
+      postData = {
+        cloudinary_id: data.result.public_id,
+        space_id: space_id
+      };
+      $.post('/api/space/add-image', postData, cs.page.handleImageAdded, "json");
+      return true;
+    },
+    handleImageAdded: function(results) {
+      if (results.err) {
+        console.log(results.err);
+      }
+    },
+    makeImageLi: function(id, options) {
+      var html;
+      html = '<li>';
+      html += '<img src="' + $.cloudinary.url(id, options) + '" alt="photo thumbnail" >';
+      html += '<button class="btn btn-danger btn-xs" data-image-id="' + id + '">Delete</button>';
+      html += '</li>';
+      return html;
     }
   };
 

@@ -68,7 +68,13 @@ module.exports = function (app, CONFIG) {
       if (err) return next(err);
       // @TODO if no space found, handle error appropriately
       if (!space) return next();
-      res.render('space/edit.jade', { space: space });
+      console.log(space.images);
+      cloudinary.config({
+        cloud_name: CONFIG.cloudinaryCloud,
+        api_key: CONFIG.cloudinaryKey,
+        api_secret: CONFIG.cloudinarySecret
+      });
+      res.render('space/edit.jade', { space: space, cloudinary:cloudinary, cloud: CONFIG.cloudinaryCloud, key: CONFIG.cloudinaryKey });
     })
   })
 

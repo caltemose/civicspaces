@@ -25,6 +25,10 @@ var models = require('./models');
 var routes = require('./routes');
 var middleware = require('./middleware');
 
+// @TODO fix CONFIG.dbURI override
+if (CONFIG.host === 'http://localhost')
+  CONFIG.dbUri = 'mongodb://localhost/csproto';
+
 mongoose.connect(CONFIG.dbUri, function (err) {
   if (err) throw err;
 

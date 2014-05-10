@@ -9,6 +9,7 @@ block content
 
     form(enctype="multipart/form-data")!=cloudinary.uploader.image_upload_tag('image')
 
+    div.preview
 
 block scripts
   script(src="/assets/vendor/jquery.ui.widget.js")
@@ -24,8 +25,24 @@ block scripts
     field.bind('fileuploadstart', function(e) {
       console.log('file upload started...');
     });
+    field.bind('fileuploadfail', function(e, data) {
+      console.log('file upload failed: ', data);
+    });
+    field.bind('fileuploadprogress', function(e, data) {
+      console.log( 'progress: ' + Math.round((data.loaded * 100.0) / data.total) + '%' );
+    });
     field.bind('cloudinarydone', function(e, data) {
       console.log('cloudinarydone', e, data);
+      $('.preview').html(
+        $.cloudinary.image(data.result.public_id,
+          {
+            format: data.result.format, 
+            version: data.result.version,
+            crop: 'fill',
+            width: 150, height: 150
+          }
+        )
+      );
       return true;
     });
 

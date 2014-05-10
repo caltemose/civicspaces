@@ -92,4 +92,19 @@ module.exports = function (app) {
       res.jsonp({success:true});
     })
   })
+
+  app.post('/api/space/add-image', loggedIn, function(req, res) {
+    var cloudinary_id = req.param('cloudinary_id');
+    var space_id = req.param('space_id');
+    if (!cloudinary_id || !space_id) 
+      return res.jsonp({err:'You must provide a cloudinary_id and space_id.'})
+    var update = {
+      $push: {images: {cloudinary_id: cloudinary_id}}
+    }
+    Space.findByIdAndUpdate(space_id, update, null, function(err, space) {
+      if (err) return res.json({err:err});
+      if (!space) return res.json({err:"Could not find a space with the provided ID."});
+      return res.jsonp({success:true, cloudinary_id: cloudinary_id, space_id: space_id})
+    });
+  })
 };

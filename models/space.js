@@ -33,7 +33,12 @@ var schema = mongoose.Schema({
     bathroom: {type:String, enum: ['None', 'Single', 'Multiple']},
     kitchen: {type:String, enum: ['None', 'Partial', 'Full']}
   },
-  description: {type:String}
+  description: {type:String},
+  images: [
+    {
+      cloudinary_id: String
+    }
+  ]
 })
 
 schema.statics.updateProperty = function(req, callback) {
@@ -43,9 +48,6 @@ schema.statics.updateProperty = function(req, callback) {
   var value = req.param('value');
   var update = {}
   update[property] = value;
-
-  // console.log(query);
-  // console.log(update);
 
   //update the model
   this.update(query, update, function(err, affected) {
