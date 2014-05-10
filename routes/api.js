@@ -107,4 +107,14 @@ module.exports = function (app) {
       return res.jsonp({success:true, cloudinary_id: cloudinary_id, space_id: space_id})
     });
   })
+
+  app.post('/api/space/delete-image', loggedIn, function(req, res) {
+    var image_id = req.param('image_id');
+    var space_id = req.param('space_id');
+    if (!image_id || !space_id) 
+      return res.jsonp({err:'You must provide an image_id and space_id.'})
+    // @TODO delete from database then delete from cloudinary
+    return res.jsonp({image_id:image_id, space_id:space_id})
+  })
+
 };

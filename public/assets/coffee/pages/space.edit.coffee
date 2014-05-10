@@ -40,6 +40,12 @@
     field.bind 'fileuploadfail', @handleImageUploadFail
     field.bind 'fileuploadprogress', @handleImageUploadProgress
     field.bind 'cloudinarydone', @handleImageUploadDone
+    
+    # listen for clicks on the list of photos bubbling up
+    # from the individual photo delete <button>s which may
+    # be added to the dom after this page inits
+    $('.edit-photos').on 'click', 'button', cs.page.deleteImage
+
 
   initMap: ->
     latEl = $ '[name="lat"]', '.form-location'
@@ -65,6 +71,9 @@
         address: $ '[name="address"]', context
         city: $ '[name="city"]', context
         zip: $ '[name="zip"]', context
+
+  getSpaceId: ->
+    $('[name="_id"]', '.form-location').val()
 
   handleFormFailure: (event) ->
     console.log 'form failure', event.target
@@ -134,8 +143,6 @@
     console.log 'progress: ' + Math.round((data.loaded * 100.0) / data.total) + '%'
   
   handleImageUploadDone: (e, data) ->
-    # console.log 'cloudinarydone', data
-    space_id = $('[name="_id"]', '.form-upload').val()
     options =
       format: data.result.format
       version: data.result.version
@@ -145,7 +152,7 @@
     $('.edit-photos').append cs.page.makeImageLi data.result.public_id, options
     postData = 
       cloudinary_id: data.result.public_id
-      space_id: space_id
+      space_id: cs.page.getSpaceId()
     $.post '/api/space/add-image', postData, cs.page.handleImageAdded, "json"
     return true;
 
@@ -156,10 +163,25 @@
 
     # console.log 'handleImageAdded', results
 
+  handleImageDeleted: (results) ->
+    if results.err
+      console.log results.err
+      return
+
+    console.log results
+
+
+  deleteImage: (e) ->
+    postData =
+      image_id: $(this).data('image-id')
+      space_id: cs.page.getSpaceId()
+    $.post '/api/space/delete-image', postData, cs.page.handleImageDeleted, "json"
+
+
   makeImageLi: (id, options) ->
     html  = '<li>'
     html += '<img src="' + $.cloudinary.url(id, options) + '" alt="photo thumbnail" >'
-    html += '<button class="btn btn-danger btn-xs" data-image-id="' + id + '">Delete</button>'
+    html += '<button class="btn btn-danger btn-xs delete-photo" data-image-id="' + id + '">Delete</button>'
     html += '</li>'
     html
     # li

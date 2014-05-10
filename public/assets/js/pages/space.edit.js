@@ -45,7 +45,8 @@
       field.bind('fileuploadstart', this.handleImageUploadStart);
       field.bind('fileuploadfail', this.handleImageUploadFail);
       field.bind('fileuploadprogress', this.handleImageUploadProgress);
-      return field.bind('cloudinarydone', this.handleImageUploadDone);
+      field.bind('cloudinarydone', this.handleImageUploadDone);
+      return $('.edit-photos').on('click', 'button', cs.page.deleteImage);
     },
     initMap: function() {
       var addyEl, lat, latEl, lng, lngEl, marker;
@@ -73,6 +74,9 @@
           zip: $('[name="zip"]', context)
         };
       }
+    },
+    getSpaceId: function() {
+      return $('[name="_id"]', '.form-location').val();
     },
     handleFormFailure: function(event) {
       return console.log('form failure', event.target);
@@ -157,8 +161,7 @@
       return console.log('progress: ' + Math.round((data.loaded * 100.0) / data.total) + '%');
     },
     handleImageUploadDone: function(e, data) {
-      var options, postData, space_id;
-      space_id = $('[name="_id"]', '.form-upload').val();
+      var options, postData;
       options = {
         format: data.result.format,
         version: data.result.version,
@@ -169,7 +172,7 @@
       $('.edit-photos').append(cs.page.makeImageLi(data.result.public_id, options));
       postData = {
         cloudinary_id: data.result.public_id,
-        space_id: space_id
+        space_id: cs.page.getSpaceId()
       };
       $.post('/api/space/add-image', postData, cs.page.handleImageAdded, "json");
       return true;
@@ -179,11 +182,26 @@
         console.log(results.err);
       }
     },
+    handleImageDeleted: function(results) {
+      if (results.err) {
+        console.log(results.err);
+        return;
+      }
+      return console.log(results);
+    },
+    deleteImage: function(e) {
+      var postData;
+      postData = {
+        image_id: $(this).data('image-id'),
+        space_id: cs.page.getSpaceId()
+      };
+      return $.post('/api/space/delete-image', postData, cs.page.handleImageDeleted, "json");
+    },
     makeImageLi: function(id, options) {
       var html;
       html = '<li>';
       html += '<img src="' + $.cloudinary.url(id, options) + '" alt="photo thumbnail" >';
-      html += '<button class="btn btn-danger btn-xs" data-image-id="' + id + '">Delete</button>';
+      html += '<button class="btn btn-danger btn-xs delete-photo" data-image-id="' + id + '">Delete</button>';
       html += '</li>';
       return html;
     }
