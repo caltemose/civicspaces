@@ -36,11 +36,15 @@
     cs.map.addMarkerBySpace space
     html =  '<div class="col-sm-6"><div class="well result clearfix">'
     if space.images.length
-      html += '<a href="/space/view' + space._id + '">'
+      html += '<a href="/space/view/' + space._id + '">'
       html += '<img class="cloudinary-image" data-src="'
       html += space.images[0].cloudinary_id + '" data-width="100" data-height="100" data-crop="thumb" /></a>'
-    html += '<h4><a href="/space/view/' + space._id + '">' + space.address + '</a></h4>'
-    html += '</div></div>'
+    html += '<h4><a href="/space/view/' + space._id + '">' + space.address + '</a><small>'
+    if space.type and space.type.length 
+      html += space.type + '<br>'
+    if space.leaseLength and space.leaseLength.length 
+      html += space.leaseLength
+    html += '</small></h4></div>'
     cs.page.selections.results.append html
   
 $(document).ready ->
