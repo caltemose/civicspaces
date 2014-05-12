@@ -162,6 +162,7 @@
     },
     handleImageUploadDone: function(e, data) {
       var options, postData;
+      console.log('handleImageUploadDone', data);
       options = {
         format: data.result.format,
         version: data.result.version,
@@ -209,6 +210,7 @@
       html += '<img src="' + $.cloudinary.url(id, options) + '" alt="photo thumbnail" >';
       html += '<button class="btn btn-danger btn-xs delete-photo" data-image-id="' + id + '">Delete</button>';
       html += '</li>';
+      console.log(html);
       return html;
     }
   };
