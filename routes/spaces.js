@@ -43,8 +43,7 @@ module.exports = function (app, CONFIG) {
     }
 
     //reject if no terms
-    // @TODO add error specificity
-    if (!data.terms)
+    if (!data.terms || !data.address || !data.zip)
       return res.render('space/create.jade', { invalid: true, formdata: data });
 
     // @TODO validate zip

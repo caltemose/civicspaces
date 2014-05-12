@@ -186,3 +186,10 @@ input.btn {
   position: relative; }
   .result > h4 > small {
     display: block; }
+
+.btn-default {
+  border-color: #cae3f8;
+  background-color: #dbecfb; }
+  .btn-default:hover, .btn-default:focus {
+    border-color: #9dcbf2;
+    background-color: #add4f6; }

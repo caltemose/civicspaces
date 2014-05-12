@@ -21,11 +21,11 @@ block content
 
     else 
       div.row
-        div.col-md-7
+        div.col-md-6
           p Fill out and submit this form to create a listing for a new space. 
           
           if invalid
-            div.alert.alert-danger Invalid. Why?
+            div.alert.alert-danger You must provide a valid address and zip code and agree to the Terms & Conditions.
 
       form(method="POST" action="/space/create" enctype="application/x-www-form-urlencoded")
 
