@@ -163,15 +163,18 @@
       console.log results.err
       return
 
-    # console.log 'handleImageAdded', results
 
   handleImageDeleted: (results) ->
+    console.log results
     if results.err
       console.log results.err
       return
 
-    console.log results
+    if results.success
+      $('[data-src="' + results.image_id + '"]', '.edit-photos').parent().remove()
 
+    unless results.result.result is 'ok'
+      console.log 'image deleted from DB but NOT deleted from cloudinary'
 
   deleteImage: (e) ->
     postData =

@@ -2,8 +2,10 @@ var loggedIn = require('../middleware/loggedIn');
 var mongoose = require('mongoose');
 var User = mongoose.model('User');
 var Space = mongoose.model('Space');
+var cloudinary = require('cloudinary');
 
-module.exports = function (app) {
+
+module.exports = function (app, CONFIG) {
 
   app.get('/api/strip-geo/:id', function(req, res) {
     //console.log(req.param('id'));
@@ -113,8 +115,20 @@ module.exports = function (app) {
     var space_id = req.param('space_id');
     if (!image_id || !space_id) 
       return res.jsonp({err:'You must provide an image_id and space_id.'})
-    // @TODO delete from database then delete from cloudinary
-    return res.jsonp({image_id:image_id, space_id:space_id})
+    var update = {
+      $pull: { images: { cloudinary_id: image_id }}
+    }
+    Space.findByIdAndUpdate(space_id, update, null, function(err, space) {
+      if (err) return res.jsonp({err:err});
+      if (!space) return res.jsonp({err:"No space found with provided id."});
+      cloudinary.config({
+        cloud_name: CONFIG.cloudinaryCloud,
+        api_key: CONFIG.cloudinaryKey,
+        api_secret: CONFIG.cloudinarySecret
+      })
+      cloudinary.uploader.destroy(image_id, function(result) {
+        return res.jsonp({success:true, image_id: image_id, result: result});
+      }, null);
+    })
   })
-
 };

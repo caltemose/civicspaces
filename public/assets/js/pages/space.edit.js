@@ -183,11 +183,17 @@
       }
     },
     handleImageDeleted: function(results) {
+      console.log(results);
       if (results.err) {
         console.log(results.err);
         return;
       }
-      return console.log(results);
+      if (results.success) {
+        $('[data-src="' + results.image_id + '"]', '.edit-photos').parent().remove();
+      }
+      if (results.result.result !== 'ok') {
+        return console.log('image deleted from DB but NOT deleted from cloudinary');
+      }
     },
     deleteImage: function(e) {
       var postData;

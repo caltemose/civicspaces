@@ -123,10 +123,5 @@ module.exports = function (app, CONFIG) {
 
   app.get('/space/map', function(req, res) {
     return res.render('space/map.jade');
-    // Space.find({}, null, { limit: 25 }, function (err, spaces) {
-    //   if (err) return next(err);
-    //   if (!spaces) return next();
-    //   return res.render('space/map.jade', {spaces: spaces});
-    // });
   })
 }

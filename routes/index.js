@@ -39,7 +39,7 @@ module.exports = function (app, CONFIG) {
   spaces(app, CONFIG);
 
   // API routes
-  api(app);
+  api(app, CONFIG);
 
   // error handlers
   errors(app);
