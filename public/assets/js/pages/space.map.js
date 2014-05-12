@@ -8,7 +8,8 @@
     init: function() {
       cs.page.selections.results = $('#mapresults');
       cs.sharedMethods.initMap('#googlemap');
-      return cs.sharedMethods.setBoundsUpdate(cs.page.handleBoundsUpdate);
+      cs.sharedMethods.setBoundsUpdate(cs.page.handleBoundsUpdate);
+      return cs.sharedMethods.cloudinaryConfig();
     },
     handleBoundsUpdate: function() {
       var bounds, geo;
@@ -22,19 +23,18 @@
       return $.getJSON('/api/properties/bounded', geo, cs.page.displaySpaces);
     },
     displaySpaces: function(data) {
-      var space, _i, _len, _ref, _results;
+      var space, _i, _len, _ref;
       if (data.err) {
         return console.log(err);
       }
       if (data.spaces && data.spaces.length > 0) {
         cs.page.selections.results.html('');
         _ref = data.spaces;
-        _results = [];
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           space = _ref[_i];
-          _results.push(cs.page.displaySpace(space));
+          cs.page.displaySpace(space);
         }
-        return _results;
+        return $('.cloudinary-image').cloudinary();
       } else {
         return console.log('no Spaces found in given boundaries');
       }
@@ -42,14 +42,14 @@
     displaySpace: function(space) {
       var html;
       cs.map.addMarkerBySpace(space);
-      html = "<div class=\"col-sm-6\"><div class=\"well result clearfix\">\n<h4><a href=\"/space/view/" + space._id + "\">" + space.address + "</a></h4>\n<ul>";
-      if (space.type) {
-        html += '<li>' + space.type + '</li>';
+      html = '<div class="col-sm-6"><div class="well result clearfix">';
+      if (space.images.length) {
+        html += '<a href="/space/view' + space._id + '">';
+        html += '<img class="cloudinary-image" data-src="';
+        html += space.images[0].cloudinary_id + '" data-width="100" data-height="100" data-crop="thumb" /></a>';
       }
-      if (space.leaseLength) {
-        html += '<li>' + space.leaseLength + '</li>';
-      }
-      html += '</ul></div></div>';
+      html += '<h4><a href="/space/view/' + space._id + '">' + space.address + '</a></h4>';
+      html += '</div></div>';
       return cs.page.selections.results.append(html);
     }
   };

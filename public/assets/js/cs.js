@@ -32,6 +32,13 @@
     },
     setBoundsUpdate: function(callback) {
       return google.maps.event.addListener(cs.map.googlemap, 'bounds_changed', callback);
+    },
+    cloudinaryConfig: function() {
+      if (!cs.cloudinary.config) {
+        console.log('cs.cloudinary.config is missing');
+        return;
+      }
+      return $.cloudinary.config(cs.cloudinary.config);
     }
   };
 

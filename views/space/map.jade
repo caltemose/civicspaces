@@ -16,5 +16,13 @@ block content
 
 block scripts
   script(src='https://maps.googleapis.com/maps/api/js?sensor=false')
+  script(src="/assets/vendor/jquery.cloudinary.js")
   script(src="/assets/js/cs.js")
+  script.
+    cs.cloudinary = {
+      config: {
+        cloud_name: '!{cloud}',
+        api_key: '!{key}'
+      }
+    }
   script(src="/assets/js/pages/space.map.js")

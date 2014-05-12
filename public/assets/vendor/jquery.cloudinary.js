@@ -1,5 +1,5 @@
 /*
- * Cloudinary's jQuery library - v1.0.14
+ * Cloudinary's jQuery library - v1.0.16
  * Copyright Cloudinary
  * see https://github.com/cloudinary/cloudinary_js
  */
@@ -19,7 +19,9 @@
     var $ = window.jQuery;
     factory($);
     $(function() {
-      $("input.cloudinary-fileupload[type=file]").cloudinary_fileupload();
+      if($.fn.cloudinary_fileupload !== undefined) {
+        $("input.cloudinary-fileupload[type=file]").cloudinary_fileupload();
+      }
     });
   }
 }(function ($) {
@@ -254,7 +256,7 @@
       }
     }
 
-    var prefix = secure ? 'https://' : window.location.protocol + '//';
+    var prefix = secure ? 'https://' : (window.location.protocol === 'file:' ? "file://" : 'http://');
     prefix = protocol ? protocol + '//' : prefix;
     if (cloud_name.match(/^\//) && !secure) {
       prefix = "/res" + cloud_name;
@@ -466,7 +468,7 @@
     for (var key in upload_params) {
       var value = upload_params[key];
       if ($.isPlainObject(value)) {
-        upload_params[key] = $.map(value, function(){return arguments.join("=");}).join("|");      
+        upload_params[key] = $.map(value, function(v, k){return k + "=" + v;}).join("|");      
       } else if ($.isArray(value)) {
         if (value.length > 0 && $.isArray(value[0])) {
           upload_params[key] = $.map(value, function(array_value){return array_value.join(",");}).join("|");                

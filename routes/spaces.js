@@ -68,7 +68,6 @@ module.exports = function (app, CONFIG) {
       if (err) return next(err);
       // @TODO if no space found, handle error appropriately
       if (!space) return next();
-      console.log(space.images);
       cloudinary.config({
         cloud_name: CONFIG.cloudinaryCloud,
         api_key: CONFIG.cloudinaryKey,
@@ -122,6 +121,6 @@ module.exports = function (app, CONFIG) {
   })
 
   app.get('/space/map', function(req, res) {
-    return res.render('space/map.jade');
+    return res.render('space/map.jade', {cloud: CONFIG.cloudinaryCloud, key: CONFIG.cloudinaryKey});
   })
 }

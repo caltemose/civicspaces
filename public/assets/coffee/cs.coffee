@@ -12,9 +12,15 @@
     unless !cs.map
       cs.map.redraw lat, lng, marker
 
-
   setBoundsUpdate: (callback) ->
     google.maps.event.addListener cs.map.googlemap, 'bounds_changed', callback
+
+  cloudinaryConfig: ->
+    unless cs.cloudinary.config
+      console.log 'cs.cloudinary.config is missing'
+      return
+    
+    $.cloudinary.config cs.cloudinary.config
 
 
 @cs.events = 

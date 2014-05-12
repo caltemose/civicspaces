@@ -8,6 +8,7 @@
     cs.page.selections.results = $('#mapresults');
     cs.sharedMethods.initMap('#googlemap');
     cs.sharedMethods.setBoundsUpdate(cs.page.handleBoundsUpdate);
+    cs.sharedMethods.cloudinaryConfig()
   
   handleBoundsUpdate: ->
     bounds = cs.map.getBounds()
@@ -26,22 +27,20 @@
     if data.spaces and data.spaces.length > 0
       cs.page.selections.results.html ''
       cs.page.displaySpace space for space in data.spaces
+      $('.cloudinary-image').cloudinary()
+
     else 
       console.log 'no Spaces found in given boundaries'
   
   displaySpace: (space) ->
     cs.map.addMarkerBySpace space
-    # img.pull-right(src='' alt='') // insert before H4 below
-    html =  """
-            <div class="col-sm-6"><div class="well result clearfix">
-            <h4><a href="/space/view/#{space._id}">#{space.address}</a></h4>
-            <ul>
-            """
-    if space.type
-      html += '<li>' + space.type + '</li>'
-    if space.leaseLength
-      html += '<li>' + space.leaseLength + '</li>'
-    html += '</ul></div></div>'
+    html =  '<div class="col-sm-6"><div class="well result clearfix">'
+    if space.images.length
+      html += '<a href="/space/view' + space._id + '">'
+      html += '<img class="cloudinary-image" data-src="'
+      html += space.images[0].cloudinary_id + '" data-width="100" data-height="100" data-crop="thumb" /></a>'
+    html += '<h4><a href="/space/view/' + space._id + '">' + space.address + '</a></h4>'
+    html += '</div></div>'
     cs.page.selections.results.append html
   
 $(document).ready ->

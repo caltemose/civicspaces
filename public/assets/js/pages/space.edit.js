@@ -32,11 +32,7 @@
     },
     initImageUpload: function() {
       var field;
-      if (!cs.cloudinary.config) {
-        console.log('cs.cloudinaryConfig is missing');
-        return;
-      }
-      $.cloudinary.config(cs.cloudinary.config);
+      cs.sharedMethods.cloudinaryConfig();
       field = $('.cloudinary-fileupload');
       if (!field) {
         console.log('cloudinary upload field missing');
@@ -162,7 +158,7 @@
     },
     handleImageUploadDone: function(e, data) {
       var options, postData;
-      console.log('handleImageUploadDone', data);
+      console.log('handleImageUploadDone');
       options = {
         format: data.result.format,
         version: data.result.version,
@@ -210,7 +206,6 @@
       html += '<img src="' + $.cloudinary.url(id, options) + '" alt="photo thumbnail" >';
       html += '<button class="btn btn-danger btn-xs delete-photo" data-image-id="' + id + '">Delete</button>';
       html += '</li>';
-      console.log(html);
       return html;
     }
   };

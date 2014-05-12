@@ -79,7 +79,7 @@ module.exports = function (app, CONFIG) {
       .where('geo.lat').gt(sw_lat).lt(ne_lat)
       .where('geo.lng').gt(sw_lng).lt(ne_lng)
       .limit(20)
-      .select('address city zip contact geo type leaseLength')
+      .select('address city zip contact geo type leaseLength images')
       .exec(function(err, spaces) {
         if (err) return res.jsonp({err:err})
         var data = {spaces:[]};

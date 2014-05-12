@@ -26,11 +26,8 @@
     form.bind cs.events.FORM_SUCCESS, cs.page.handleFormSuccess
 
   initImageUpload: ->
-    unless cs.cloudinary.config
-      console.log 'cs.cloudinaryConfig is missing'
-      return
+    cs.sharedMethods.cloudinaryConfig()
     
-    $.cloudinary.config cs.cloudinary.config
     field = $ '.cloudinary-fileupload'
     if !field
       console.log 'cloudinary upload field missing'
@@ -143,7 +140,7 @@
     console.log 'progress: ' + Math.round((data.loaded * 100.0) / data.total) + '%'
   
   handleImageUploadDone: (e, data) ->
-    console.log 'handleImageUploadDone', data
+    console.log 'handleImageUploadDone'
     # @TODO display new image AFTER it's been added to db
     options =
       format: data.result.format
@@ -189,7 +186,7 @@
     html += '<img src="' + $.cloudinary.url(id, options) + '" alt="photo thumbnail" >'
     html += '<button class="btn btn-danger btn-xs delete-photo" data-image-id="' + id + '">Delete</button>'
     html += '</li>'
-    console.log html
+    # console.log html
     html
     
 
